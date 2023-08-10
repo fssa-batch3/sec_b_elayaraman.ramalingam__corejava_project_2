@@ -91,7 +91,7 @@ public class RouteDAO {
         ResultSet rs = null;
         List<Route> list = null;
         try {
-            String query = "SELECT * FROM route";
+            String query = "SELECT * FROM route WHERE is_active = 1";
 
             conn = ConnectionUtil.getConnection();
 
@@ -184,10 +184,48 @@ public class RouteDAO {
             list = new ArrayList<>();
             do {
                 Route r = new Route();
-                r.setRouteId(rs.getInt("route_id"));
+                r.setRouteId(rs.getInt("id"));
                 r.setFrom_location(rs.getString("from_location"));
                 r.setTo_location(rs.getString("to_location"));
                 list.add(r);
+            } while (rs.next());
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            throw new Exception(e);
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+            throw new Exception(e);
+        } finally {
+            ConnectionUtil.close(conn, ps, rs);
+        }
+        return list;
+    }
+    
+    public Route getRouteById(int id) throws Exception {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Route list = null;
+        try {
+            String query = "SELECT * FROM route WHERE id = ?";
+
+            conn = ConnectionUtil.getConnection();
+
+            ps = conn.prepareStatement(query);
+
+            ps.setInt(1, id);
+
+            rs = ps.executeQuery();
+
+            if (!rs.next()) {
+                return null;
+            }
+
+            do {
+                list = new Route();
+                list.setRouteId(rs.getInt("id"));
+                list.setFrom_location(rs.getString("from_location"));
+                list.setTo_location(rs.getString("to_location"));
             } while (rs.next());
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -225,7 +263,7 @@ public class RouteDAO {
             list = new ArrayList<>();
             do {
                 Route r = new Route();
-                r.setRouteId(rs.getInt("route_id"));
+                r.setRouteId(rs.getInt("id"));
                 r.setFrom_location(rs.getString("from_location"));
                 r.setTo_location(rs.getString("to_location"));
                 list.add(r);

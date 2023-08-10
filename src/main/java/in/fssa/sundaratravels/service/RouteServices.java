@@ -44,6 +44,9 @@ public class RouteServices {
 	public void deleteRoute(int id) throws Exception {
 		routeDAO.deleteRoute(id);
 	}
+	public Route getRouteById(int id) throws Exception {
+        return routeDAO.getRouteById(id);
+    }
 	
 
 }
