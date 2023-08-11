@@ -15,8 +15,8 @@ public class CreateRoute {
     @Test
     public void testCreateRouteWithValidInput() throws Exception {
         Route route = new Route();
-        route.setFrom_location("DrumStick Island");
-        route.setTo_location("Marineford");
+        route.setFrom_location("DrumSticdsvk Island");
+        route.setTo_location("Marinefodvsvdrd");
 
         assertDoesNotThrow(() -> {
             services.createRoute(route);
@@ -29,10 +29,10 @@ public class CreateRoute {
         Exception exception = assertThrows(Exception.class, () -> {
             services.createRoute(null);
         });
-        String exceptedMessage = "Route is null";
+        String expectedMessage = "Route is null";
         String actualMessage = exception.getMessage();
 
-        assertTrue(exceptedMessage.equals(actualMessage));
+        assertTrue(expectedMessage.equals(actualMessage));
     }
 
     @Test
@@ -44,10 +44,10 @@ public class CreateRoute {
         Exception exception = assertThrows(Exception.class, () -> {
             services.createRoute(route);
         });
-        String exceptedMessage = "From location cannot be empty or null";
+        String expectedMessage = "From location cannot be empty or null";
         String actualMessage = exception.getMessage();
 
-        assertTrue(exceptedMessage.equals(actualMessage));
+        assertTrue(expectedMessage.equals(actualMessage));
 
     }
      @Test
@@ -59,10 +59,10 @@ public class CreateRoute {
          Exception exception = assertThrows(Exception.class, () -> {
              services.createRoute(route);
          });
-         String exceptedMessage = "From location cannot be empty or null";
+         String expectedMessage = "From location cannot be empty or null";
          String actualMessage = exception.getMessage();
 
-         assertTrue(exceptedMessage.equals(actualMessage));
+         assertTrue(expectedMessage.equals(actualMessage));
 
      }
     @Test
@@ -74,10 +74,10 @@ public class CreateRoute {
         Exception exception = assertThrows(Exception.class, () -> {
             services.createRoute(route);
         });
-        String exceptedMessage = "To location cannot be empty or null";
+        String expectedMessage = "To location cannot be empty or null";
         String actualMessage = exception.getMessage();
 
-        assertTrue(exceptedMessage.equals(actualMessage));
+        assertTrue(expectedMessage.equals(actualMessage));
 
     }
      @Test
@@ -89,10 +89,10 @@ public class CreateRoute {
          Exception exception = assertThrows(Exception.class, () -> {
              services.createRoute(route);
          });
-         String exceptedMessage = "To location cannot be empty or null";
+         String expectedMessage = "To location cannot be empty or null";
          String actualMessage = exception.getMessage();
 
-         assertTrue(exceptedMessage.equals(actualMessage));
+         assertTrue(expectedMessage.equals(actualMessage));
 
      }
      @Test
@@ -104,10 +104,10 @@ public class CreateRoute {
         Exception exception = assertThrows(Exception.class, () -> {
             services.createRoute(route);
         });
-        String exceptedMessage = "Both cannot be same";
+        String expectedMessage = "Both cannot be same";
         String actualMessage = exception.getMessage();
 
-        assertTrue(exceptedMessage.equals(actualMessage));
+        assertTrue(expectedMessage.equals(actualMessage));
 
     }
 
