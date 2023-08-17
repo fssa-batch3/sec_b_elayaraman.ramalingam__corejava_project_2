@@ -13,17 +13,11 @@ public class StringUtil {
     }
 
     public static boolean isValidString(String input) {
-        if (input == null && "".equals(input)) {
-            return false;
-        }
-        return true;
+        return input != null || !"".equals(input);
     }
 
     public static boolean isInvalidString(String input) {
-        if (StringUtil.isValidString(input)) {
-            return false;
-        }
-        return true;
+        return !StringUtil.isValidString(input);
     }
 
 }

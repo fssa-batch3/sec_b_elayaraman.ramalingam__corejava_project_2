@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import in.fssa.sundaratravels.service.RouteServices;
 
-public class CreateRoute {
+public class TestCreateRoute {
 
     RouteServices services = new RouteServices();
 
@@ -32,7 +32,7 @@ public class CreateRoute {
         String expectedMessage = "Route is null";
         String actualMessage = exception.getMessage();
 
-        assertTrue(expectedMessage.equals(actualMessage));
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class CreateRoute {
         String expectedMessage = "From location cannot be empty or null";
         String actualMessage = exception.getMessage();
 
-        assertTrue(expectedMessage.equals(actualMessage));
+        assertEquals(expectedMessage, actualMessage);
 
     }
      @Test
@@ -62,7 +62,7 @@ public class CreateRoute {
          String expectedMessage = "From location cannot be empty or null";
          String actualMessage = exception.getMessage();
 
-         assertTrue(expectedMessage.equals(actualMessage));
+         assertEquals(expectedMessage, actualMessage);
 
      }
     @Test
@@ -77,7 +77,7 @@ public class CreateRoute {
         String expectedMessage = "To location cannot be empty or null";
         String actualMessage = exception.getMessage();
 
-        assertTrue(expectedMessage.equals(actualMessage));
+        assertEquals(expectedMessage, actualMessage);
 
     }
      @Test
@@ -92,7 +92,7 @@ public class CreateRoute {
          String expectedMessage = "To location cannot be empty or null";
          String actualMessage = exception.getMessage();
 
-         assertTrue(expectedMessage.equals(actualMessage));
+         assertEquals(expectedMessage, actualMessage);
 
      }
      @Test
@@ -107,7 +107,7 @@ public class CreateRoute {
         String expectedMessage = "Both cannot be same";
         String actualMessage = exception.getMessage();
 
-        assertTrue(expectedMessage.equals(actualMessage));
+         assertEquals(expectedMessage, actualMessage);
 
     }
 

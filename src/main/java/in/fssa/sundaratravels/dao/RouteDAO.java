@@ -13,7 +13,7 @@ import in.fssa.sundaratravels.exception.ValidationException;
 
 public class RouteDAO {
 
-    public void createRoute(Route route) throws ValidationException, Exception {
+    public void createRoute(Route route) throws Exception {
 
 		Connection conn = null;
         PreparedStatement ps = null;
