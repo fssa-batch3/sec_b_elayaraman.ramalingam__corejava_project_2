@@ -65,7 +65,7 @@ public class RouteTest {
     @Test
     public void testValidRoute() {
         Route route = new Route();
-        route.setFrom_location("Sour145");
+        route.setFrom_location("Soooour145");
         route.setTo_location("Destination");
         route.setBasePrice(BigDecimal.valueOf(100));
 
@@ -94,7 +94,7 @@ public class RouteTest {
         });
         assertEquals("Both cannot be same", exception.getMessage());
     }
-    
+
 
     @Test
     public void testEmptyFromLocation() {
