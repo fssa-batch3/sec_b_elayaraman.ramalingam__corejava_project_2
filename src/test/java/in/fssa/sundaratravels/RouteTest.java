@@ -65,7 +65,7 @@ public class RouteTest {
     @Test
     public void testValidRoute() {
         Route route = new Route();
-        route.setFrom_location("Source145");
+        route.setFrom_location("Sour145");
         route.setTo_location("Destination");
         route.setBasePrice(BigDecimal.valueOf(100));
 
@@ -98,7 +98,7 @@ public class RouteTest {
     @Test
     public void testValidBasePrice() {
         Route route = new Route();
-        route.setFrom_location("Surce121");
+        route.setFrom_location("Suuurce121");
         route.setTo_location("Destination");
         route.setBasePrice(BigDecimal.valueOf(100));
 
@@ -162,7 +162,7 @@ public class RouteTest {
     @Test
     public void testValidBasePriceWithDecimals() {
         Route route = new Route();
-        route.setFrom_location("Sour1");
+        route.setFrom_location("Soureee1");
         route.setTo_location("Destination");
         route.setBasePrice(BigDecimal.valueOf(99.99));
 

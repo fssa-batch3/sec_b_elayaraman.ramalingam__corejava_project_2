@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import in.fssa.sundaratravels.service.*;
 import in.fssa.sundaratravels.model.*;
 
-public class CreateBusTest {
+public class BusTest {
 
 	BusServices services = new BusServices();
 
@@ -19,7 +19,7 @@ public class CreateBusTest {
 	public void testCreateBusWithValidInput() {
 		Bus bus = new Bus();
 
-		bus.setBusNo("TN80ER1721");
+		bus.setBusNo("TN88ER1721");
 		bus.setDeparture_time(Time.valueOf("08:00:00"));
 		bus.setArrival_time(Time.valueOf("11:00:00"));
 		bus.setIs_ac(true);
