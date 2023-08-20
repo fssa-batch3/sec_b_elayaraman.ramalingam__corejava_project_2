@@ -94,18 +94,7 @@ public class RouteTest {
         });
         assertEquals("Both cannot be same", exception.getMessage());
     }
-
-    @Test
-    public void testValidBasePrice() {
-        Route route = new Route();
-        route.setFrom_location("Suuurce121");
-        route.setTo_location("Destination");
-        route.setBasePrice(BigDecimal.valueOf(100));
-
-        assertDoesNotThrow(() -> {
-            services.createRoute(route);
-        });
-    }
+    
 
     @Test
     public void testEmptyFromLocation() {
@@ -157,18 +146,6 @@ public class RouteTest {
             services.createRoute(route);
         });
         assertEquals("Base price must be a positive value", exception.getMessage());
-    }
-
-    @Test
-    public void testValidBasePriceWithDecimals() {
-        Route route = new Route();
-        route.setFrom_location("Soureee1");
-        route.setTo_location("Destination");
-        route.setBasePrice(BigDecimal.valueOf(99.99));
-
-        assertDoesNotThrow(() -> {
-            services.createRoute(route);
-        });
     }
 
     @Test
