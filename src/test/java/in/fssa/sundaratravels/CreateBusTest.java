@@ -10,36 +10,35 @@ import in.fssa.sundaratravels.service.*;
 import in.fssa.sundaratravels.model.*;
 
 public class CreateBusTest {
-	
+
 	BusServices services = new BusServices();
-	
+
 	@Test
 	public void testCreateBusWithValidInput() {
 		Bus bus = new Bus();
-		
-		 bus.setBusNo("TN99ER1731");
-	        bus.setDeparture_time(Time.valueOf("08:00:00"));
-	        bus.setArrival_time(Time.valueOf("11:00:00"));
-	        bus.setSchedule_id(1);
-	        bus.setIs_ac(true);
-	        bus.setRoute_id(1);
-	        
-	        assertDoesNotThrow (()->{
-                    services.createBus(bus);
-            });
+
+		bus.setBusNo("TN89ER1721");
+		bus.setDeparture_time(Time.valueOf("08:00:00"));
+		bus.setArrival_time(Time.valueOf("11:00:00"));
+		bus.setIs_ac(true);
+		bus.setRoute_id(1);
+		bus.setCapacity(42);
+
+		assertDoesNotThrow(() -> {
+			services.createBus(bus);
+		});
 	}
-	
+
 	@Test
-	public void testCreateBusWithNull(){
-		
-		Exception exception = assertThrows(Exception.class,()->{
+	public void testCreateBusWithNull() {
+		Exception exception = assertThrows(Exception.class, () -> {
 			services.createBus(null);
 		});
-		
-		String exceptedMessage = "Bus cannot be null";
+
+		String expectedMessage = "Bus cannot be null";
 		String actualMessage = exception.getMessage();
 
-        assertEquals(exceptedMessage, actualMessage);
+		assertEquals(expectedMessage, actualMessage);
 	}
 
 	@Test
@@ -49,7 +48,6 @@ public class CreateBusTest {
 		bus.setBusNo("TN77F1934");
 		bus.setDeparture_time(null); // Invalid time
 		bus.setArrival_time(Time.valueOf("15:00:00"));
-		bus.setSchedule_id(1);
 		bus.setIs_ac(true);
 		bus.setRoute_id(1);
 
@@ -68,9 +66,8 @@ public class CreateBusTest {
 		Bus bus = new Bus();
 
 		bus.setBusNo("TN77F1934");
-		bus.setDeparture_time(Time.valueOf("15:00:00")); // Invalid time
-		bus.setArrival_time(null);
-		bus.setSchedule_id(1);
+		bus.setDeparture_time(Time.valueOf("15:00:00"));
+		bus.setArrival_time(null); // Invalid time
 		bus.setIs_ac(true);
 		bus.setRoute_id(1);
 
@@ -83,5 +80,4 @@ public class CreateBusTest {
 
 		assertEquals(expectedMessage, actualMessage);
 	}
-
 }

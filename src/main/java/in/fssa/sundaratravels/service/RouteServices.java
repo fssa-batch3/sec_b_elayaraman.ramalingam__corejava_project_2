@@ -36,9 +36,9 @@ public class RouteServices {
 		return list;
 	}
 	
-	public List<Route> getByFromLocationAndTolocation(String from, String to) throws Exception {
-		List<Route> list = routeDAO.getByFromLocationAndTolocation(from, to);
-		return list;
+	public Route getByFromLocationAndTolocation(String from, String to) throws Exception {
+		Route route = routeDAO.getByFromLocationAndToLocation(from, to);
+		return route;
 	}
 
 	public void deleteRoute(int id) throws Exception {

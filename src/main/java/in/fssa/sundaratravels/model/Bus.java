@@ -60,5 +60,15 @@ public class Bus {
     private Time departure_time;
     private Time arrival_time;
     private boolean is_ac;
+
+	public int getCapacity() {
+		return capacity;
+	}
+
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
+	}
+
+	private int capacity;
     
 }
