@@ -1,6 +1,8 @@
 package in.fssa.sundaratravels;
 
+import static in.fssa.sundaratravels.util.BusNumberGenerator.generateRandomBusNumber;
 import static org.junit.jupiter.api.Assertions.*;
+import in.fssa.sundaratravels.util.BusNumberGenerator;
 
 import java.sql.Time;
 
@@ -17,9 +19,12 @@ public class BusTest {
 
 	@Test
 	public void testCreateBusWithValidInput() {
+
+		String Busno = generateRandomBusNumber();
+		System.out.println(Busno);
 		Bus bus = new Bus();
 
-		bus.setBusNo("TN88ER1721");
+		bus.setBusNo(Busno);
 		bus.setDeparture_time(Time.valueOf("08:00:00"));
 		bus.setArrival_time(Time.valueOf("11:00:00"));
 		bus.setIs_ac(true);
