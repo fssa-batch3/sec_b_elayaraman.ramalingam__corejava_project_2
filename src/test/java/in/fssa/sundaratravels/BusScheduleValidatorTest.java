@@ -1,6 +1,7 @@
 package in.fssa.sundaratravels;
 
 import static org.junit.jupiter.api.Assertions.*;
+import in.fssa.sundaratravels.service.BusScheduleServices;
 
 import org.junit.jupiter.api.Test;
 import in.fssa.sundaratravels.validator.BusScheduleValidator;
@@ -9,13 +10,15 @@ import in.fssa.sundaratravels.model.BusSchedule;
 
 public class BusScheduleValidatorTest {
 
+    BusScheduleServices services = new BusScheduleServices();
+
     @Test
     public void testValidBusSchedule() {
         BusSchedule busSchedule = new BusSchedule();
         busSchedule.setBusId(1);
 
         assertDoesNotThrow(() -> {
-            BusScheduleValidator.validate(busSchedule);
+            services.createBusSchedule(busSchedule);
         });
     }
 

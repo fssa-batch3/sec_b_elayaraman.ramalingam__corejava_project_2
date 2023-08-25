@@ -10,7 +10,7 @@ public class App {
 
 	public static void main(String[] args) throws Exception {
 
-		RouteServices dao = new RouteServices();
+		RouteServices routeDAO = new RouteServices();
 		BusServices busServices = new BusServices();
 		
 
@@ -22,7 +22,7 @@ public class App {
 
 		//dao.createRoute(route);
 
-		 route = dao.getByFromLocationAndTolocation("chennai","salem");
+		 route = routeDAO.getByFromLocationAndTolocation("chennai","salem");
 
 		System.out.println(route.toString());
 //

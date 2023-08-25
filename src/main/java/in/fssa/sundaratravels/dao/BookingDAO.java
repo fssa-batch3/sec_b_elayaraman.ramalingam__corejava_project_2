@@ -3,10 +3,7 @@ package in.fssa.sundaratravels.dao;
 import in.fssa.sundaratravels.model.Booking;
 import in.fssa.sundaratravels.util.ConnectionUtil;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,7 +113,7 @@ public class BookingDAO {
         List<Booking> bookings = new ArrayList<>();
 
         try {
-            String query = "SELECT * FROM booking WHERE bus_id = ?";
+            String query = "SELECT * FROM bookings WHERE bus_id = ?";
             conn = ConnectionUtil.getConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, busId);
@@ -133,12 +130,35 @@ public class BookingDAO {
         return bookings;
     }
 
+    public Booking getBookingWithBusIdAndDate(int busId, String travelDate) throws RuntimeException {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Booking booking = null;
+        try {
+            String query = "SELECT * FROM bookings WHERE bus_id = ? AND travel_date = ?";
+            conn = ConnectionUtil.getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, busId);
+            ps.setDate(2, java.sql.Date.valueOf(travelDate));
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                booking = extractBookingFromResultSet(rs);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            ConnectionUtil.close(conn, ps, rs);
+        }
+        return booking;
+    }
+
     public void updateBooking(Booking booking) throws Exception {
         Connection conn = null;
         PreparedStatement ps = null;
 
         try {
-            String query = "UPDATE booking SET bus_id = ?, schedule_id = ?, travel_date = ?, booked_seats = ? WHERE id = ?";
+            String query = "UPDATE bookings SET bus_id = ?, schedule_id = ?, travel_date = ?, booked_seats = ? WHERE id = ?";
             conn = ConnectionUtil.getConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, booking.getBusId());
@@ -158,7 +178,7 @@ public class BookingDAO {
         PreparedStatement ps = null;
 
         try {
-            String query = "DELETE FROM booking WHERE id = ?";
+            String query = "DELETE FROM bookings WHERE id = ?";
             conn = ConnectionUtil.getConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, id);
@@ -176,7 +196,7 @@ public class BookingDAO {
         Booking booking = null;
 
         try {
-            String query = "SELECT b.* FROM booking b JOIN bus_schedule bs ON b.schedule_id = bs.id JOIN bus bu ON bs.bus_id = bu.id WHERE bu.bus_no = ?";
+            String query = "SELECT b.* FROM bookings b JOIN bus_schedule bs ON b.schedule_id = bs.id JOIN bus bu ON bs.bus_id = bu.id WHERE bu.bus_no = ?";
             conn = ConnectionUtil.getConnection();
             ps = conn.prepareStatement(query);
             ps.setString(1, busNo);

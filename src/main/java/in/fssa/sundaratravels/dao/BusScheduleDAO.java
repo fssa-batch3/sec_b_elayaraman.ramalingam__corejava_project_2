@@ -17,7 +17,7 @@ public class BusScheduleDAO {
         PreparedStatement ps = null;
 
         try {
-            String query = "INSERT INTO bus_schedule (bus_id, monday, tuesday, wednesday, thursday, friday, saturday, sunday) " +
+            String query = "INSERT INTO bus_schedules (bus_id, monday, tuesday, wednesday, thursday, friday, saturday, sunday) " +
                     "VALUES(?,?,?,?,?,?,?,?)";
             conn = ConnectionUtil.getConnection();
             ps = conn.prepareStatement(query);
@@ -46,7 +46,7 @@ public class BusScheduleDAO {
         BusSchedule busSchedule = null;
 
         try {
-            String query = "SELECT * FROM bus_schedule WHERE id = ?";
+            String query = "SELECT * FROM bus_schedules WHERE id = ?";
             conn = ConnectionUtil.getConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, id);
@@ -71,7 +71,7 @@ public class BusScheduleDAO {
         List<BusSchedule> list = new ArrayList<>();
 
         try {
-            String query = "SELECT * FROM bus_schedule";
+            String query = "SELECT * FROM bus_schedules";
             conn = ConnectionUtil.getConnection();
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
@@ -94,7 +94,7 @@ public class BusScheduleDAO {
         PreparedStatement ps = null;
 
         try {
-            String query = "UPDATE bus_schedule SET bus_id=?, monday=?, tuesday=?, wednesday=?, thursday=?, friday=?, saturday=?, sunday=? " +
+            String query = "UPDATE bus_schedules SET bus_id=?, monday=?, tuesday=?, wednesday=?, thursday=?, friday=?, saturday=?, sunday=? " +
                     "WHERE id=?";
             conn = ConnectionUtil.getConnection();
             ps = conn.prepareStatement(query);
@@ -122,7 +122,7 @@ public class BusScheduleDAO {
         PreparedStatement ps = null;
 
         try {
-            String query = "DELETE FROM bus_schedule WHERE id=?";
+            String query = "DELETE FROM bus_schedules WHERE id=?";
             conn = ConnectionUtil.getConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, id);

@@ -150,7 +150,7 @@ public class RouteDAO {
         List<Route> list = new ArrayList<>();
 
         try {
-            String query = "SELECT * FROM route WHERE to_location = ? AND is_active = 1";
+            String query = "SELECT * FROM routes WHERE to_location = ? AND is_active = 1";
 
             conn = ConnectionUtil.getConnection();
 
@@ -178,7 +178,7 @@ public class RouteDAO {
         PreparedStatement ps = null;
 
         try {
-            String query = "UPDATE route SET is_active = 0 WHERE id = ?";
+            String query = "UPDATE routes SET is_active = 0 WHERE id = ?";
             conn = ConnectionUtil.getConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, id);
@@ -199,7 +199,7 @@ public class RouteDAO {
         Route route = null;
 
         try {
-            String query = "SELECT * FROM route WHERE (from_location = ? AND to_location = ?) OR (from_location = ? AND to_location = ?)";
+            String query = "SELECT * FROM routes WHERE (from_location = ? AND to_location = ?) OR (from_location = ? AND to_location = ?)";
 
             conn = ConnectionUtil.getConnection();
 

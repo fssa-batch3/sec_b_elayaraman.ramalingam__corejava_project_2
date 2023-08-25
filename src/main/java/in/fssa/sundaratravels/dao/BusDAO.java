@@ -7,7 +7,6 @@ import in.fssa.sundaratravels.model.Bus;
 import in.fssa.sundaratravels.model.Route;
 import in.fssa.sundaratravels.service.RouteServices;
 import in.fssa.sundaratravels.util.ConnectionUtil;
-import in.fssa.sundaratravels.exception.ValidationException;
 
 public class BusDAO {
 
@@ -25,7 +24,7 @@ public class BusDAO {
 		
 
 		try {
-			String query = "INSERT INTO bus (bus_no, departure_time, capacity, arrival_time, is_ac, route_id)"
+			String query = "INSERT INTO buses (bus_no, departure_time, capacity, arrival_time, is_ac, route_id)"
 					+ " VALUES(?,?,?,?,?,?)";
 			conn = ConnectionUtil.getConnection();
 			ps = conn.prepareStatement(query);
@@ -56,11 +55,13 @@ public class BusDAO {
 		ResultSet rs = null;
 		Bus bus = null;
 		try {
-			String query = "SELECT * FROM bus WHERE id = ?";
+			String query = "SELECT * FROM buses WHERE bus_id = ?";
 
 			conn = ConnectionUtil.getConnection();
 
 			ps = conn.prepareStatement(query);
+
+			ps.setInt(1,id);
 
 			rs = ps.executeQuery();
 
@@ -76,10 +77,7 @@ public class BusDAO {
 				bus.setIs_active(rs.getBoolean("is_active"));
 				bus.setCapacity(rs.getInt("capacity"));
 			}
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-			throw new Exception(e);
-		} catch (RuntimeException e) {
+		} catch (SQLException | RuntimeException e) {
 			System.out.println(e.getMessage());
 			throw new Exception(e);
 		} finally {
@@ -95,7 +93,7 @@ public class BusDAO {
 		List<Bus> list = null;
 
 		try {
-			String query = "SELECT * FROM bus WHERE is_active = 1";
+			String query = "SELECT * FROM buses WHERE is_active = 1";
 			conn = ConnectionUtil.getConnection();
 			ps = conn.prepareStatement(query);
 
@@ -103,23 +101,11 @@ public class BusDAO {
 			if (rs.next()) {
 				list = new ArrayList<>();
 				while (rs.next()) {
-					Bus bus = new Bus();
-					bus.setId(rs.getInt("id"));
-					bus.setBusNo(rs.getString("bus_no"));
-					bus.setDeparture_time(rs.getTime("departure_time"));
-					bus.setRoute_id(rs.getInt("route_id"));
-					bus.setSchedule_id(rs.getInt("schedule_id"));
-					bus.setArrival_time(rs.getTime("arrival_time"));
-					bus.setIs_ac(rs.getBoolean("is_ac"));
-					bus.setIs_active(rs.getBoolean("is_active"));
-					bus.setCapacity(rs.getInt("capacity"));
-
+					Bus bus = extractBusFromResultSet(rs);
+					list.add(bus);
 				}
 			}
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-			throw new Exception(e);
-		} catch (RuntimeException e) {
+		} catch (SQLException | RuntimeException e) {
 			System.out.println(e.getMessage());
 			throw new Exception(e);
 		} finally {
@@ -133,13 +119,13 @@ public class BusDAO {
 		Connection conn = null;
 		PreparedStatement ps = null;
 
-		Bus bustest = getBus(bus.getId());
-		if (bustest == null) {
+		Bus isBusExist = getBus(bus.getId());
+		if (isBusExist == null) {
 			throw new RuntimeException("Invalid Bus Id");
 		}
 
 		try {
-			String query = "UPDATE bus SET departure_time = ?, arrival_time = ? , route_id = ? WHERE bus_id = ?";
+			String query = "UPDATE buses SET departure_time = ?, arrival_time = ? , route_id = ? WHERE bus_id = ?";
 			conn = ConnectionUtil.getConnection();
 			ps = conn.prepareStatement(query);
 			ps.setTime(1, bus.getDeparture_time());
@@ -149,10 +135,7 @@ public class BusDAO {
 			ps.executeUpdate();
 			System.out.println("Bus Updated");
 
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-			throw new Exception(e);
-		} catch (RuntimeException e) {
+		} catch (SQLException | RuntimeException e) {
 			System.out.println(e.getMessage());
 			throw new Exception(e);
 		} finally {
@@ -165,23 +148,20 @@ public class BusDAO {
 		Connection conn = null;
 		PreparedStatement ps = null;
 
-		Bus bustest = getBus(id);
-		if (bustest == null) {
+		Bus isBusExist = getBus(id);
+		if (isBusExist == null) {
 			throw new RuntimeException("Invalid Bus Id");
 		}
 
 		try {
-			String query = "UPDATE bus SET  is_active = NOT is_active WHERE bus_id = ?";
+			String query = "UPDATE buses SET  is_active = NOT is_active WHERE bus_id = ?";
 			conn = ConnectionUtil.getConnection();
 			ps = conn.prepareStatement(query);
 			ps.setInt(1, id);
 
 			ps.executeUpdate();
 
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-			throw new Exception(e);
-		} catch (RuntimeException e) {
+		} catch (SQLException | RuntimeException e) {
 			System.out.println(e.getMessage());
 			throw new Exception(e);
 		} finally {
