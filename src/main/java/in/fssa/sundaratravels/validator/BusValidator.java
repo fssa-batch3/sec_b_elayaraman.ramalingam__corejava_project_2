@@ -13,11 +13,11 @@ public class BusValidator {
 
 		StringUtil.rejectIfInvalidString(bus.getBusNo(), "Bus No");
 
-		if (bus.getDeparture_time() == null) {
+		if (bus.getDepartureTime() == null) {
 			throw new ValidationException("Departure time cannot be empty");
 		}
 
-		if (bus.getArrival_time() == null) {
+		if (bus.getArrivalTime() == null) {
 			throw new ValidationException("Arrival time cannot be empty");
 		}
 
@@ -27,6 +27,11 @@ public class BusValidator {
 
 		if (bus.getCapacity() <= 0) {
 			throw new ValidationException("Capacity must be a positive value");
+		}
+	}
+	public static void validate(int id, String name) throws ValidationException{
+		if(id < 1){
+			throw new ValidationException("Invalid "+name+" Id");
 		}
 	}
 }

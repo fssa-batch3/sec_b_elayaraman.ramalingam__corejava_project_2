@@ -8,7 +8,7 @@ import in.fssa.sundaratravels.validator.BusScheduleValidator;
 import in.fssa.sundaratravels.exception.ValidationException;
 import in.fssa.sundaratravels.model.BusSchedule;
 
-public class BusScheduleValidatorTest {
+public class BusScheduleTest {
 
     BusScheduleServices services = new BusScheduleServices();
 

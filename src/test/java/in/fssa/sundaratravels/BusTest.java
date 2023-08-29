@@ -25,11 +25,12 @@ public class BusTest {
 		Bus bus = new Bus();
 
 		bus.setBusNo(Busno);
-		bus.setDeparture_time(Time.valueOf("08:00:00"));
-		bus.setArrival_time(Time.valueOf("11:00:00"));
-		bus.setIs_ac(true);
-		bus.setRoute_id(1);
+		bus.setDepartureTime(Time.valueOf("08:00:00"));
+		bus.setArrivalTime(Time.valueOf("11:00:00"));
+		bus.setAc(true);
+		bus.setRouteId(1);
 		bus.setCapacity(42);
+		bus.setScheduleId(1);
 
 		assertDoesNotThrow(() -> {
 			services.createBus(bus);
@@ -53,10 +54,10 @@ public class BusTest {
 		Bus bus = new Bus();
 
 		bus.setBusNo("TN77F1934");
-		bus.setDeparture_time(null); // Invalid time
-		bus.setArrival_time(Time.valueOf("15:00:00"));
-		bus.setIs_ac(true);
-		bus.setRoute_id(1);
+		bus.setDepartureTime(null); // Invalid time
+		bus.setArrivalTime(Time.valueOf("15:00:00"));
+		bus.setAc(true);
+		bus.setRouteId(1);
 
 		Exception exception = assertThrows(
 				Exception.class, () -> services.createBus(bus)
@@ -73,10 +74,10 @@ public class BusTest {
 		Bus bus = new Bus();
 
 		bus.setBusNo("TN77F1934");
-		bus.setDeparture_time(Time.valueOf("15:00:00"));
-		bus.setArrival_time(null); // Invalid time
-		bus.setIs_ac(true);
-		bus.setRoute_id(1);
+		bus.setDepartureTime(Time.valueOf("15:00:00"));
+		bus.setArrivalTime(null); // Invalid time
+		bus.setAc(true);
+		bus.setRouteId(1);
 
 		Exception exception = assertThrows(
 				Exception.class, () -> services.createBus(bus)
@@ -91,10 +92,10 @@ public class BusTest {
 	public void testInvalidBusNo() {
 		Bus bus = new Bus();
 		bus.setBusNo("InvalidBusNo");
-		bus.setDeparture_time(Time.valueOf("08:00:00"));
-		bus.setArrival_time(Time.valueOf("11:00:00"));
-		bus.setIs_ac(true);
-		bus.setRoute_id(1);
+		bus.setDepartureTime(Time.valueOf("08:00:00"));
+		bus.setArrivalTime(Time.valueOf("11:00:00"));
+		bus.setAc(true);
+		bus.setRouteId(1);
 		bus.setCapacity(42);
 
 		Exception exception = assertThrows(Exception.class, () -> {
@@ -111,10 +112,10 @@ public class BusTest {
 	public void testMissingDepartureTime() {
 		Bus bus = new Bus();
 		bus.setBusNo("TN99ER1731");
-		bus.setDeparture_time(null);
-		bus.setArrival_time(Time.valueOf("01:11:11"));   // Replace with a valid time
-		bus.setIs_ac(true);
-		bus.setRoute_id(1);
+		bus.setDepartureTime(null);
+		bus.setArrivalTime(Time.valueOf("01:11:11"));   // Replace with a valid time
+		bus.setAc(true);
+		bus.setRouteId(1);
 		bus.setCapacity(42);
 
 		Exception exception = assertThrows(Exception.class, () -> {
@@ -131,10 +132,10 @@ public class BusTest {
 	public void testMissingArrivalTime() {
 		Bus bus = new Bus();
 		bus.setBusNo("TN99ER1731");
-		bus.setDeparture_time(Time.valueOf("01:11:11")); // Replace with a valid time
-		bus.setArrival_time(null);
-		bus.setIs_ac(true);
-		bus.setRoute_id(1);
+		bus.setDepartureTime(Time.valueOf("01:11:11")); // Replace with a valid time
+		bus.setArrivalTime(null);
+		bus.setAc(true);
+		bus.setRouteId(1);
 		bus.setCapacity(42);
 
 		Exception exception = assertThrows(Exception.class, () -> {
@@ -151,10 +152,10 @@ public class BusTest {
 	public void testNegativeCapacity() {
 		Bus bus = new Bus();
 		bus.setBusNo("TN99ER1731");
-		bus.setDeparture_time(Time.valueOf("08:00:00"));
-		bus.setArrival_time(Time.valueOf("11:00:00"));
-		bus.setIs_ac(true);
-		bus.setRoute_id(1);
+		bus.setDepartureTime(Time.valueOf("08:00:00"));
+		bus.setArrivalTime(Time.valueOf("11:00:00"));
+		bus.setAc(true);
+		bus.setRouteId(1);
 		bus.setCapacity(-42); // Negative capacity
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
@@ -167,10 +168,10 @@ public class BusTest {
 	public void testZeroCapacity() {
 		Bus bus = new Bus();
 		bus.setBusNo("TN99ER1731");
-		bus.setDeparture_time(Time.valueOf("08:00:00"));
-		bus.setArrival_time(Time.valueOf("11:00:00"));
-		bus.setIs_ac(true);
-		bus.setRoute_id(1);
+		bus.setDepartureTime(Time.valueOf("08:00:00"));
+		bus.setArrivalTime(Time.valueOf("11:00:00"));
+		bus.setAc(true);
+		bus.setRouteId(1);
 		bus.setCapacity(0); // Zero capacity
 
 		Exception exception = assertThrows(ValidationException.class, () -> {

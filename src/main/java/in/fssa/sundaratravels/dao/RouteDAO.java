@@ -7,46 +7,47 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import in.fssa.sundaratravels.exception.PersistenceException;
 import in.fssa.sundaratravels.model.Route;
 import in.fssa.sundaratravels.util.ConnectionUtil;
 import in.fssa.sundaratravels.exception.ValidationException;
 
 public class RouteDAO {
 
-    public void createRoute(Route route) throws Exception {
+    public void createRoute(Route route) throws PersistenceException {
         Connection conn = null;
         PreparedStatement ps = null;
-        ResultSet generatedKeys = null;
+        int rs = 0;
 
         try {
-            String query = "INSERT INTO route (from_location, to_location, base_price) VALUES (?, ?, ?)";
+            String query = "INSERT INTO routes (from_location, to_location, base_price) VALUES (?, ?, ?)";
             conn = ConnectionUtil.getConnection();
-            ps = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
-            ps.setString(1, route.getFrom_location());
-            ps.setString(2, route.getTo_location());
+            ps = conn.prepareStatement(query);
+            ps.setString(1, route.getFromLocation());
+            ps.setString(2, route.getToLocation());
             ps.setBigDecimal(3, route.getBasePrice());
 
-            if (doesReverseCombinationExist(conn, route.getTo_location(), route.getFrom_location())) {
-                throw new RuntimeException("Reverse route combination already exists");
+            if (doesReverseCombinationExist(conn, route.getToLocation(), route.getFromLocation())) {
+                throw new SQLException("Reverse route combination already exists");
             }
 
-            ps.executeUpdate();
+            rs = ps.executeUpdate();
 
-            generatedKeys = ps.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                int routeId = generatedKeys.getInt(1);
-                route.setRouteId(routeId);
+            if(rs > 0){
+                System.out.println("route created");
+            }else{
+                System.out.println("Route is not created");
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            throw new Exception(e);
+            throw new PersistenceException(e.getMessage());
         } finally {
-            ConnectionUtil.close(conn, ps, generatedKeys);
+            ConnectionUtil.close(conn, ps);
         }
     }
 
     private boolean doesReverseCombinationExist(Connection conn, String fromLocation, String toLocation) throws SQLException {
-        String query = "SELECT id FROM route WHERE from_location = ? AND to_location = ?";
+        String query = "SELECT route_id FROM routes WHERE from_location = ? AND to_location = ?";
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, fromLocation);
             ps.setString(2, toLocation);
@@ -56,14 +57,14 @@ public class RouteDAO {
         }
     }
 
-    public List<Route> getAllRoutes() throws Exception {
+    public List<Route> getAllRoutes() throws PersistenceException {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         List<Route> list = new ArrayList<>();
 
         try {
-            String query = "SELECT * FROM route WHERE is_active = 1";
+            String query = "SELECT route_id,from_location,to_location,base_price,is_active FROM routes WHERE is_active = 1";
 
             conn = ConnectionUtil.getConnection();
 
@@ -77,21 +78,21 @@ public class RouteDAO {
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            throw new Exception(e);
+            throw new PersistenceException(e.getMessage());
         } finally {
             ConnectionUtil.close(conn, ps, rs);
         }
         return list;
     }
 
-    public Route getRouteById(int id) throws Exception {
+    public Route getRouteById(int id) throws PersistenceException {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         Route route = null;
 
         try {
-            String query = "SELECT * FROM route WHERE id = ?";
+            String query = "SELECT route_id,from_location,to_location,base_price,is_active FROM routes WHERE id = ?";
 
             conn = ConnectionUtil.getConnection();
 
@@ -106,21 +107,21 @@ public class RouteDAO {
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            throw new Exception(e);
+            throw new PersistenceException(e.getMessage());
         } finally {
             ConnectionUtil.close(conn, ps, rs);
         }
         return route;
     }
 
-    public List<Route> getByFromLocation(String from) throws Exception {
+    public List<Route> getByFromLocation(String from) throws  PersistenceException {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         List<Route> list = new ArrayList<>();
 
         try {
-            String query = "SELECT * FROM route WHERE from_location = ? AND is_active = 1";
+            String query = "SELECT route_id,from_location,to_location,base_price,is_active FROM routes WHERE from_location = ? AND is_active = 1";
 
             conn = ConnectionUtil.getConnection();
 
@@ -134,23 +135,25 @@ public class RouteDAO {
                 Route route = extractRouteFromResultSet(rs);
                 list.add(route);
             }
+
+            if(list.isEmpty()) throw new SQLException("No routes with this location as from location");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            throw new Exception(e);
+            throw new PersistenceException(e.getMessage());
         } finally {
             ConnectionUtil.close(conn, ps, rs);
         }
         return list;
     }
 
-    public List<Route> getByToLocation(String to) throws Exception {
+    public List<Route> getByToLocation(String to) throws PersistenceException {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         List<Route> list = new ArrayList<>();
 
         try {
-            String query = "SELECT * FROM routes WHERE to_location = ? AND is_active = 1";
+            String query = "SELECT route_id,from_location,to_location,base_price,is_active FROM routes WHERE to_location = ? AND is_active = 1";
 
             conn = ConnectionUtil.getConnection();
 
@@ -164,16 +167,17 @@ public class RouteDAO {
                 Route route = extractRouteFromResultSet(rs);
                 list.add(route);
             }
+            if(list.isEmpty()) throw new SQLException("No routes with this location as to location");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            throw new Exception(e);
+            throw new PersistenceException(e.getMessage());
         } finally {
             ConnectionUtil.close(conn, ps, rs);
         }
         return list;
     }
 
-    public void deleteRoute(int id) throws Exception {
+    public void deleteRoute(int id) throws PersistenceException {
         Connection conn = null;
         PreparedStatement ps = null;
 
@@ -186,20 +190,20 @@ public class RouteDAO {
             System.out.println("Route deleted");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            throw new Exception(e);
+            throw new PersistenceException(e.getMessage());
         } finally {
             ConnectionUtil.close(conn, ps);
         }
     }
 
-    public Route getByFromLocationAndToLocation(String from, String to) throws Exception {
+    public Route getByFromLocationAndToLocation(String from, String to) throws PersistenceException {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         Route route = null;
 
         try {
-            String query = "SELECT * FROM routes WHERE (from_location = ? AND to_location = ?) OR (from_location = ? AND to_location = ?)";
+            String query = "SELECT route_id,from_location,to_location,base_price,is_active FROM routes WHERE (from_location = ? AND to_location = ?) OR (from_location = ? AND to_location = ?)";
 
             conn = ConnectionUtil.getConnection();
 
@@ -216,9 +220,11 @@ public class RouteDAO {
                 route = new Route();
                 route = extractRouteFromResultSet(rs);
             }
+
+            if(route == null) throw new SQLException("No routes with this locations");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            throw new Exception(e);
+            throw new PersistenceException(e.getMessage());
         } finally {
             ConnectionUtil.close(conn, ps, rs);
         }
@@ -229,9 +235,9 @@ public class RouteDAO {
 
     private Route extractRouteFromResultSet(ResultSet rs) throws SQLException {
         Route route = new Route();
-        route.setRouteId(rs.getInt("id"));
-        route.setFrom_location(rs.getString("from_location"));
-        route.setTo_location(rs.getString("to_location"));
+        route.setRouteId(rs.getInt("route_id"));
+        route.setFromLocation(rs.getString("from_location"));
+        route.setToLocation(rs.getString("to_location"));
         route.setBasePrice(rs.getBigDecimal("base_price"));
         return route;
     }

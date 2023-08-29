@@ -13,10 +13,10 @@ public class RouteValidator {
             throw new ValidationException("Route is null");
         }
 
-        StringUtil.rejectIfInvalidString(route.getFrom_location(),"From location");
-        StringUtil.rejectIfInvalidString(route.getTo_location(),"To location");
+        StringUtil.rejectIfInvalidString(route.getFromLocation(),"From location");
+        StringUtil.rejectIfInvalidString(route.getToLocation(),"To location");
 
-        if (route.getFrom_location().equalsIgnoreCase(route.getTo_location())) {
+        if (route.getFromLocation().equalsIgnoreCase(route.getToLocation())) {
             throw new ValidationException("Both cannot be same");
         }
 
@@ -28,11 +28,11 @@ public class RouteValidator {
             throw new ValidationException("Base price must have at most two decimal places");
         }
 
-        if (route.getFrom_location().length() > 100) {
+        if (route.getFromLocation().length() > 100) {
             throw new ValidationException("From location exceeds maximum length");
         }
 
-        if (route.getTo_location().length() > 100) {
+        if (route.getToLocation().length() > 100) {
             throw new ValidationException("To location exceeds maximum length");
         }
     }

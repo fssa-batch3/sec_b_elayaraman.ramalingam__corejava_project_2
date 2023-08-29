@@ -1,51 +1,62 @@
 package in.fssa.sundaratravels.service;
 
-import java.util.List;
-
-import in.fssa.sundaratravels.model.Booking;
+import com.google.protobuf.ServiceException;
 import in.fssa.sundaratravels.dao.BookingDAO;
-import in.fssa.sundaratravels.validator.BookingValidator;
+import in.fssa.sundaratravels.exception.PersistenceException;
 import in.fssa.sundaratravels.exception.ValidationException;
+import in.fssa.sundaratravels.model.Booking;
+import in.fssa.sundaratravels.validator.BookingValidator;
+
+import java.sql.Date;
+import java.util.List;
 
 public class BookingServices {
 
     private BookingDAO bookingDAO = new BookingDAO();
 
-    public void createBooking(Booking booking) throws ValidationException, Exception {
-        BookingValidator.validate(booking);
-        bookingDAO.createBooking(booking);
+    public void createBooking(Booking booking) throws ServiceException {
+        try {
+            BookingValidator.validate(booking);
+            bookingDAO.createBooking(booking);
+        } catch (PersistenceException | ValidationException e) {
+            e.printStackTrace();
+            throw new ServiceException(e.getMessage());
+        }
     }
 
-    public Booking getBookingById(int id) throws Exception {
-        return bookingDAO.getBookingById(id);
+    public List<Booking> getAllBookings() throws ServiceException {
+        try {
+            return bookingDAO.getAllBookings();
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            throw new ServiceException(e.getMessage());
+        }
     }
 
-    public List<Booking> getAllBookings() throws Exception {
-        return bookingDAO.getAllBookings();
+    public List<Booking> getBookingsByDate(Date travelDate) throws ServiceException {
+        try {
+            return bookingDAO.getBookingsByDate(travelDate);
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            throw new ServiceException(e.getMessage());
+        }
     }
 
-    public List<Booking> getBookingsByDate(String travelDate) throws Exception {
-        return bookingDAO.getBookingsByDate(travelDate);
+    public List<Booking> getBookingsByBusId(int busId) throws ServiceException {
+        try {
+            return bookingDAO.getBookingsByBusId(busId);
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            throw new ServiceException(e.getMessage());
+        }
     }
 
-    public List<Booking> getBookingsByBusId(int busId) throws Exception {
-        return bookingDAO.getBookingsByBusId(busId);
-    }
-
-    public Booking getBookingWithBusIdAndDate(int busId, String travelDate) throws Exception {
-        return bookingDAO.getBookingWithBusIdAndDate(busId, travelDate);
-    }
-
-    public void updateBooking(Booking booking) throws ValidationException, Exception {
-        BookingValidator.validate(booking);
-        bookingDAO.updateBooking(booking);
-    }
-
-    public void deleteBooking(int id) throws Exception {
-        bookingDAO.deleteBooking(id);
-    }
-
-    public Booking getBookingByBusNo(String busNo) throws Exception {
-        return bookingDAO.getBookingByBusNo(busNo);
+    public List<Booking> getBookingsByDateAndBusId(Date travelDate, int busId) throws ServiceException {
+        try {
+            return bookingDAO.getBookingsByDateAndBusId(travelDate, busId);
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            throw new ServiceException(e.getMessage());
+        }
     }
 }

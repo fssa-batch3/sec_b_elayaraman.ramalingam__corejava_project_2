@@ -5,22 +5,22 @@ import java.math.BigDecimal;
 public abstract class RouteEntity {
 	
 	public int getRouteId() {
-		return RouteId;
+		return routeId;
 	}
 	public void setRouteId(int routeId) {
-		RouteId = routeId;
+		routeId = routeId;
 	}
-	public String getFrom_location() {
-		return from_location;
+	public String getFromLocation() {
+		return fromLocation;
 	}
-	public void setFrom_location(String from_location) {
-		this.from_location = from_location;
+	public void setFromLocation(String fromLocation) {
+		this.fromLocation = fromLocation;
 	}
-	public String getTo_location() {
-		return to_location;
+	public String getToLocation() {
+		return toLocation;
 	}
-	public void setTo_location(String to_location) {
-		this.to_location = to_location;
+	public void setToLocation(String toLocation) {
+		this.toLocation = toLocation;
 	}
 	public BigDecimal getBasePrice() {
 		return basePrice;
@@ -31,13 +31,13 @@ public abstract class RouteEntity {
 	}
 	@Override
 	public String toString() {
-		return "[RouteId=" + RouteId + ", from_location=" + from_location + ", to_location=" + to_location
+		return "[RouteId=" + routeId + ", fromLocation=" + fromLocation + ", to_location=" + toLocation
 				+"Base Price=" + basePrice
 		+"]\n";
 	}
-	private int RouteId;
-	private String from_location;
-	private String to_location;
+	private int routeId;
+	private String fromLocation;
+	private String toLocation;
 	private BigDecimal basePrice;
 	
 	

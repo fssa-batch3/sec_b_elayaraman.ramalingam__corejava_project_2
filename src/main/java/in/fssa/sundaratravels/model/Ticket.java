@@ -5,6 +5,10 @@ import java.sql.Date;
 
 public class Ticket {
     private int id;
+    private int bookingId;
+    private Date travelDate;
+    private int bookedSeats;
+    private BigDecimal totalPrice;
 
     public int getId() {
         return id;
@@ -14,12 +18,12 @@ public class Ticket {
         this.id = id;
     }
 
-    public int getBusId() {
-        return busId;
+    public int getBookingId() {
+        return bookingId;
     }
 
-    public void setBusId(int busId) {
-        this.busId = busId;
+    public void setBookingId(int bookingId) {
+        this.bookingId = bookingId;
     }
 
     public Date getTravelDate() {
@@ -30,35 +34,21 @@ public class Ticket {
         this.travelDate = travelDate;
     }
 
-    public int getSeatCount() {
-        return seatCount;
+    public int getBookedSeats() {
+        return bookedSeats;
     }
 
-    public void setSeatCount(int seatCount) {
-        this.seatCount = seatCount;
+    public void setBookedSeats(int bookedSeats) {
+        this.bookedSeats = bookedSeats;
     }
 
-    public String getName() {
-        return name;
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
     }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    private int busId;
-    private Date travelDate;
-    private int seatCount;
-    private String name;
-    private String phoneNumber;
 
     // Constructors, getters, setters
 
@@ -66,11 +56,10 @@ public class Ticket {
     public String toString() {
         return "Ticket{" +
                 "id=" + id +
-                ", busId=" + busId +
+                ", bookingId=" + bookingId +
                 ", travelDate=" + travelDate +
-                ", seatCount=" + seatCount +
-                ", name='" + name + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
+                ", bookedSeats=" + bookedSeats +
+                ", totalPrice=" + totalPrice +
                 '}';
     }
 }

@@ -16,11 +16,11 @@ public class App {
 
 		Route route = new Route();
 
-//		route.setFrom_location("Chennai");
-//		route.setTo_location("Salem");
-//		route.setBasePrice(BigDecimal.valueOf(100.50));
+		route.setFromLocation("Salem");
+		route.setToLocation("Chennai");
+		route.setBasePrice(BigDecimal.valueOf(100.50));
 
-		//dao.createRoute(route);
+		routeDAO.createRoute(route);
 
 		 route = routeDAO.getByFromLocationAndTolocation("chennai","salem");
 

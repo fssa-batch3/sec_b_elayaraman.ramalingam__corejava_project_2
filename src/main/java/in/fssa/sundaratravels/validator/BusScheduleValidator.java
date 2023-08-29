@@ -14,4 +14,9 @@ public class BusScheduleValidator {
             throw new ValidationException("Invalid Bus Id");
         }
     }
+
+    public static void validate(int id) throws ValidationException{
+        if(id < 1)
+            throw new ValidationException("Invalid schedule Id");
+    }
 }

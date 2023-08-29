@@ -1,12 +1,15 @@
 package in.fssa.sundaratravels;
 
+import in.fssa.sundaratravels.exception.ServiceException;
 import in.fssa.sundaratravels.model.Route;
 import in.fssa.sundaratravels.service.RouteServices;
-import in.fssa.sundaratravels.exception.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static in.fssa.sundaratravels.util.RandomStringGenerator.generateRandomString;
+
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,8 +36,8 @@ public class RouteTest {
     @Test
     public void testCreateRouteWithEmptyFromLocation() {
         Route route = new Route();
-        route.setFrom_location("");
-        route.setTo_location("Kalakadu");
+        route.setFromLocation("");
+        route.setToLocation("Kalakadu");
         route.setBasePrice(BigDecimal.valueOf(100.50));
 
         Exception exception = assertThrows(Exception.class, () -> {
@@ -49,8 +52,8 @@ public class RouteTest {
     @Test
     public void testCreateRouteWithEmptyToLocation() {
         Route route = new Route();
-        route.setFrom_location("fjkvf");
-        route.setTo_location("");
+        route.setFromLocation("fjkvf");
+        route.setToLocation("");
         route.setBasePrice(BigDecimal.valueOf(100.50));
 
         Exception exception = assertThrows(Exception.class, () -> {
@@ -65,8 +68,8 @@ public class RouteTest {
     @Test
     public void testValidRoute() {
         Route route = new Route();
-        route.setFrom_location("Soooour145");
-        route.setTo_location("Destination");
+        route.setFromLocation("generateRandomString()");
+        route.setToLocation("Destination");
         route.setBasePrice(BigDecimal.valueOf(100));
 
         assertDoesNotThrow(() -> {
@@ -85,8 +88,8 @@ public class RouteTest {
     @Test
     public void testSameFromAndToLocations() {
         Route route = new Route();
-        route.setFrom_location("Location");
-        route.setTo_location("Location");
+        route.setFromLocation("Location");
+        route.setToLocation("Location");
         route.setBasePrice(BigDecimal.valueOf(100));
 
         Exception exception = assertThrows(Exception.class, () -> {
@@ -99,8 +102,8 @@ public class RouteTest {
     @Test
     public void testEmptyFromLocation() {
         Route route = new Route();
-        route.setFrom_location("");
-        route.setTo_location("Destination");
+        route.setFromLocation("");
+        route.setToLocation("Destination");
         route.setBasePrice(BigDecimal.valueOf(100));
 
         Exception exception = assertThrows(Exception.class, () -> {
@@ -112,8 +115,8 @@ public class RouteTest {
     @Test
     public void testEmptyToLocation() {
         Route route = new Route();
-        route.setFrom_location("Source");
-        route.setTo_location("");
+        route.setFromLocation("Source");
+        route.setToLocation("");
         route.setBasePrice(BigDecimal.valueOf(100));
 
         Exception exception = assertThrows(Exception.class, () -> {
@@ -125,8 +128,8 @@ public class RouteTest {
     @Test
     public void testNegativeBasePrice() {
         Route route = new Route();
-        route.setFrom_location("Source");
-        route.setTo_location("Destination");
+        route.setFromLocation("Source");
+        route.setToLocation("Destination");
         route.setBasePrice(BigDecimal.valueOf(-100));
 
         Exception exception = assertThrows(Exception.class, () -> {
@@ -138,8 +141,8 @@ public class RouteTest {
     @Test
     public void testZeroBasePrice() {
         Route route = new Route();
-        route.setFrom_location("Source");
-        route.setTo_location("Destination");
+        route.setFromLocation("Source");
+        route.setToLocation("Destination");
         route.setBasePrice(BigDecimal.ZERO);
 
         Exception exception = assertThrows(Exception.class, () -> {
@@ -151,11 +154,11 @@ public class RouteTest {
     @Test
     public void testLongFromLocation() {
         Route route = new Route();
-        route.setFrom_location("A very long source location name exceeding the limit of characters qwertyuiopqwertyuiopqwertyuiopqwertyuiop");
-        route.setTo_location("Destination");
+        route.setFromLocation("A very long source location name exceeding the limit of characters qwertyuiopqwertyuiopqwertyuiopqwertyuiop");
+        route.setToLocation("Destination");
         route.setBasePrice(BigDecimal.valueOf(100));
 
-        ValidationException exception = assertThrows(ValidationException.class, () -> {
+        ServiceException exception = assertThrows(ServiceException.class, () -> {
             services.createRoute(route);
         });
         assertEquals("From location exceeds maximum length", exception.getMessage());
@@ -164,13 +167,61 @@ public class RouteTest {
     @Test
     public void testLongToLocation() {
         Route route = new Route();
-        route.setFrom_location("Source");
-        route.setTo_location("A very long destination location name exceeding the limit of character qwertyuiopqwertyuiopqwertyuiopqwertyuiop");
+        route.setFromLocation("Source");
+        route.setToLocation("A very long destination location name exceeding the limit of character qwertyuiopqwertyuiopqwertyuiopqwertyuiop");
         route.setBasePrice(BigDecimal.valueOf(100));
 
-        ValidationException exception = assertThrows(ValidationException.class, () -> {
+        ServiceException exception = assertThrows(ServiceException.class, () -> {
             services.createRoute(route);
         });
         assertEquals("To location exceeds maximum length", exception.getMessage());
+    }
+
+    @Test
+    public void testGetByFromLocationSuccess() {
+        assertDoesNotThrow(() -> {
+            List<Route> routes = services.getByFromLocation("Salem");
+            assertFalse(routes.isEmpty());
+        });
+    }
+
+    @Test
+    public void testGetByFromLocationNotFound() {
+        assertThrows(Exception.class, () -> {
+            List<Route> routes = services.getByFromLocation("Chennai");
+            assertTrue(routes.isEmpty());
+        });
+    }
+
+    @Test
+    public void testGetByToLocationSuccess() {
+        assertDoesNotThrow(() -> {
+            List<Route> routes = services.getByToLocation("Destination");
+            assertFalse(routes.isEmpty());
+        });
+    }
+
+    @Test
+    public void testGetByToLocationNotFound() {
+        assertThrows(Exception.class, () -> {
+            List<Route> routes = services.getByToLocation("Nonexistent");
+            assertTrue(routes.isEmpty());
+        });
+    }
+
+    @Test
+    public void testGetByFromLocationAndToLocationSuccess() {
+        assertDoesNotThrow(() -> {
+            Route route = services.getByFromLocationAndTolocation("Salem", "Chennai");
+            assertNotNull(route);
+        });
+    }
+
+    @Test
+    public void testGetByFromLocationAndToLocationNotFound() {
+        assertThrows(Exception.class, () -> {
+            Route route = services.getByFromLocationAndTolocation("Nonexistent", "Nonexistent");
+            assertNull(route);
+        });
     }
 }

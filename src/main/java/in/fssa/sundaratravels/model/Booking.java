@@ -1,12 +1,10 @@
 package in.fssa.sundaratravels.model;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 public class Booking {
     private int id;
     private int busId;
-    private int scheduleId;
     private Date travelDate;
     private int bookedSeats;
 
@@ -26,16 +24,8 @@ public class Booking {
         this.busId = busId;
     }
 
-    public int getScheduleId() {
-        return scheduleId;
-    }
-
-    public void setScheduleId(int scheduleId) {
-        this.scheduleId = scheduleId;
-    }
-
-    public Date getTravelDate() {
-        return travelDate;
+    public java.sql.Date getTravelDate() {
+        return (java.sql.Date) travelDate;
     }
 
     public void setTravelDate(Date travelDate) {
