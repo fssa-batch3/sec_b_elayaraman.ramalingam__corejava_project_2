@@ -15,7 +15,7 @@ public class BusScheduleTest {
     @Test
     public void testValidBusSchedule() {
         BusSchedule busSchedule = new BusSchedule();
-        busSchedule.setBusId(1);
+        busSchedule.setBusId(3);
 
         assertDoesNotThrow(() -> {
             services.createBusSchedule(busSchedule);
