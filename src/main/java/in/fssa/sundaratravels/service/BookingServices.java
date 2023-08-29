@@ -12,7 +12,7 @@ import java.util.List;
 
 public class BookingServices {
 
-    private BookingDAO bookingDAO = new BookingDAO();
+    private final BookingDAO bookingDAO = new BookingDAO();
 
     public void createBooking(Booking booking) throws ServiceException {
         try {

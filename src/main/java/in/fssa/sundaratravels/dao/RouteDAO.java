@@ -10,7 +10,6 @@ import java.util.List;
 import in.fssa.sundaratravels.exception.PersistenceException;
 import in.fssa.sundaratravels.model.Route;
 import in.fssa.sundaratravels.util.ConnectionUtil;
-import in.fssa.sundaratravels.exception.ValidationException;
 
 public class RouteDAO {
 

@@ -11,7 +11,7 @@ import static in.fssa.sundaratravels.validator.BusValidator.validate;
 
 public class BusServices {
 
-    BusDAO busDAO = new BusDAO();
+    final BusDAO busDAO = new BusDAO();
 
     public void createBus(Bus bus) throws ServiceException {
         try {

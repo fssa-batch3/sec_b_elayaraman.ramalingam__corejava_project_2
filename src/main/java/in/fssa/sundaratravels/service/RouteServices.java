@@ -1,9 +1,8 @@
 package in.fssa.sundaratravels.service;
 
-import java.sql.SQLException;
 import java.util.List;
 
-import in.fssa.sundaratravels.exception.ServiceException;
+import in.fssa.sundaratravels.exception.ServicesException;
 import in.fssa.sundaratravels.model.Route;
 import in.fssa.sundaratravels.dao.RouteDAO;
 import in.fssa.sundaratravels.validator.RouteValidator;
@@ -12,67 +11,63 @@ import in.fssa.sundaratravels.exception.PersistenceException;
 
 public class RouteServices {
 
-	RouteDAO routeDAO = new RouteDAO();
+	final RouteDAO routeDAO = new RouteDAO();
 
-	public void createRoute(Route route) throws ServiceException {
+	public void createRoute(Route route) throws ServicesException {
 		try {
 			RouteValidator.validate(route);
 
 			routeDAO.createRoute(route);
 		} catch (ValidationException | PersistenceException e) {
-			throw new ServiceException(e.getMessage());
+			throw new ServicesException(e.getMessage());
 		}
 	}
 
-	public List<Route> getAllRoutes() throws ServiceException {
+	public List<Route> getAllRoutes() throws ServicesException {
 		try {
-			List<Route> list = routeDAO.getAllRoutes();
-			return list;
+            return routeDAO.getAllRoutes();
 		} catch (Exception e) {
-			throw new ServiceException(e.getMessage());
+			throw new ServicesException(e.getMessage());
 		}
 	}
 
-	public List<Route> getByFromLocation(String from) throws ServiceException {
+	public List<Route> getByFromLocation(String from) throws ServicesException {
 		try {
-			List<Route> list = routeDAO.getByFromLocation(from);
-			return list;
+            return routeDAO.getByFromLocation(from);
 		} catch (Exception e) {
-			throw new ServiceException(e.getMessage());
+			throw new ServicesException(e.getMessage());
 		}
 	}
 
-	public List<Route> getByToLocation(String to) throws ServiceException {
+	public List<Route> getByToLocation(String to) throws ServicesException {
 		try {
-			List<Route> list = routeDAO.getByToLocation(to);
-			return list;
+            return routeDAO.getByToLocation(to);
 		} catch (PersistenceException e) {
-			throw new ServiceException(e.getMessage());
+			throw new ServicesException(e.getMessage());
 		}
 	}
 
-	public Route getByFromLocationAndTolocation(String from, String to) throws ServiceException {
+	public Route getByFromLocationAndTolocation(String from, String to) throws ServicesException {
 		try {
-			Route route = routeDAO.getByFromLocationAndToLocation(from, to);
-			return route;
+            return routeDAO.getByFromLocationAndToLocation(from, to);
 		} catch (PersistenceException e) {
-			throw new ServiceException(e.getMessage());
+			throw new ServicesException(e.getMessage());
 		}
 	}
 
-	public void deleteRoute(int id) throws ServiceException {
+	public void deleteRoute(int id) throws ServicesException {
 		try {
 			routeDAO.deleteRoute(id);
 		} catch (PersistenceException e) {
-			throw new ServiceException(e.getMessage());
+			throw new ServicesException(e.getMessage());
 		}
 	}
 
-	public Route getRouteById(int id) throws ServiceException {
+	public Route getRouteById(int id) throws ServicesException {
 		try {
 			return routeDAO.getRouteById(id);
 		} catch (PersistenceException e) {
-			throw new ServiceException(e.getMessage());
+			throw new ServicesException(e.getMessage());
 		}
 	}
 }

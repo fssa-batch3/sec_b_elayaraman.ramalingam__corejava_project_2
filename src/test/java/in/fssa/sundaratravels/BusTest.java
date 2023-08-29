@@ -2,7 +2,6 @@ package in.fssa.sundaratravels;
 
 import static in.fssa.sundaratravels.util.BusNumberGenerator.generateRandomBusNumber;
 import static org.junit.jupiter.api.Assertions.*;
-import in.fssa.sundaratravels.util.BusNumberGenerator;
 
 import java.sql.Time;
 
@@ -15,7 +14,7 @@ import in.fssa.sundaratravels.model.*;
 
 public class BusTest {
 
-	BusServices services = new BusServices();
+	final BusServices services = new BusServices();
 
 	@Test
 	public void testCreateBusWithValidInput() {

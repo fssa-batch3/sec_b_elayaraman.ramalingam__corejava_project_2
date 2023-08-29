@@ -1,12 +1,10 @@
 package in.fssa.sundaratravels;
 
-import in.fssa.sundaratravels.exception.ServiceException;
+import in.fssa.sundaratravels.exception.ServicesException;
 import in.fssa.sundaratravels.model.Route;
 import in.fssa.sundaratravels.service.RouteServices;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static in.fssa.sundaratravels.util.RandomStringGenerator.generateRandomString;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -158,7 +156,7 @@ public class RouteTest {
         route.setToLocation("Destination");
         route.setBasePrice(BigDecimal.valueOf(100));
 
-        ServiceException exception = assertThrows(ServiceException.class, () -> {
+        ServicesException exception = assertThrows(ServicesException.class, () -> {
             services.createRoute(route);
         });
         assertEquals("From location exceeds maximum length", exception.getMessage());
@@ -171,7 +169,7 @@ public class RouteTest {
         route.setToLocation("A very long destination location name exceeding the limit of character qwertyuiopqwertyuiopqwertyuiopqwertyuiop");
         route.setBasePrice(BigDecimal.valueOf(100));
 
-        ServiceException exception = assertThrows(ServiceException.class, () -> {
+        ServicesException exception = assertThrows(ServicesException.class, () -> {
             services.createRoute(route);
         });
         assertEquals("To location exceeds maximum length", exception.getMessage());

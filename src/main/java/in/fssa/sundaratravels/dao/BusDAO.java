@@ -6,7 +6,6 @@ import java.util.List;
 
 import in.fssa.sundaratravels.exception.PersistenceException;
 import in.fssa.sundaratravels.model.Bus;
-import in.fssa.sundaratravels.model.BusSchedule;
 import in.fssa.sundaratravels.service.BusScheduleServices;
 import in.fssa.sundaratravels.util.ConnectionUtil;
 

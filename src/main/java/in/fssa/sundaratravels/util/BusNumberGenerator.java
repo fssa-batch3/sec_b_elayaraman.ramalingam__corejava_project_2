@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class BusNumberGenerator {
 
-    private static Set<String> generatedBusNumbers = new HashSet<>();
+    private static final Set<String> generatedBusNumbers = new HashSet<>();
 
     public static String generateRandomBusNumber() {
         //String prefix = generateRandomPrefix();

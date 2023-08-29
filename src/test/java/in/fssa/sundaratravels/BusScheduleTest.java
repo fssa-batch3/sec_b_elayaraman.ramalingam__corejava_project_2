@@ -10,7 +10,7 @@ import in.fssa.sundaratravels.model.BusSchedule;
 
 public class BusScheduleTest {
 
-    BusScheduleServices services = new BusScheduleServices();
+    final BusScheduleServices services = new BusScheduleServices();
 
     @Test
     public void testValidBusSchedule() {
