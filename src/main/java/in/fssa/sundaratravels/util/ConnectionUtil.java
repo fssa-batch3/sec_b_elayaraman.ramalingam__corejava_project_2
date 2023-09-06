@@ -16,20 +16,20 @@ public class ConnectionUtil {
         String password;
 
 
-        url = System.getenv("DATABASE_HOSTNAME");
-        username = System.getenv("DATABASE_USERNAME");
-        password = System.getenv("DATABASE_PASSWORD"); 
+//        url = System.getenv("DATABASE_HOSTNAME");
+//        username = System.getenv("DATABASE_USERNAME");
+//        password = System.getenv("DATABASE_PASSWORD");
 
 //        if(url == null)
-   	//url = "jdbc:mysql://127.0.0.1:3306/sundaratravels";
+   	url = "jdbc:mysql://127.0.0.1:3306/sundaratravels";
        // url = "jdbc:mysql://164.52.216.41:3306/elayaraman_ramalingam_corejava_project" ;
 //
 //        if(username == null)
-  // 	 username = "root";
+   	 username = "root";
 //        username = "cIeKvqxHC9lX" ;
 //
 //        if(password == null)
-  //	password = "Elaya@007";
+  	password = "Elaya@007";
 //        password = "c3fe8bfb-9dae-4aaa-a8ce-54f39d812a60" ;
 
         
