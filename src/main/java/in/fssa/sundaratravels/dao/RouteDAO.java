@@ -43,6 +43,36 @@ public class RouteDAO {
             ConnectionUtil.close(conn, ps);
         }
     }
+    
+    public void updateRoute(Route route) throws PersistenceException {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        int rs = 0;
+
+        try {
+            String query = "UPDATE routes SET from_location = ?, to_location = ?, base_price = ? WHERE route_id = ?";
+            conn = getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, route.getFromLocation());
+            ps.setString(2, route.getToLocation());
+            ps.setBigDecimal(3, route.getBasePrice());
+            ps.setInt(4, route.getRouteId()); 
+
+            rs = ps.executeUpdate();
+
+            if (rs > 0) {
+                System.out.println("Route updated");
+            } else {
+                System.out.println("Route is not updated");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            throw new PersistenceException(e.getMessage());
+        } finally {
+            ConnectionUtil.close(conn, ps);
+        }
+    }
+
 
     public void updateRoutePrice(int id, BigDecimal price) throws PersistenceException {
         Connection conn = null;

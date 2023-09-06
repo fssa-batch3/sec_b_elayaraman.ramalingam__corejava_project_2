@@ -35,6 +35,30 @@ public class BusDAO {
 			}
 		}
 	}
+	public void updateBus(Bus bus) throws PersistenceException {
+		Bus existingBus = getBus(bus.getId());
+		if (existingBus == null) {
+			throw new RuntimeException("Invalid Bus Id");
+		}
+		System.out.println(bus.toString());
+		try (Connection conn = ConnectionUtil.getConnection();
+			 PreparedStatement ps = conn.prepareStatement(
+					 "UPDATE buses SET departure_time = ?, arrival_time = ?, route_id = ? ,schedule_id = ? ,is_ac = ?,capacity = ? WHERE bus_id = ?"
+			 )
+		) {
+			ps.setTime(1, bus.getDepartureTime());
+			ps.setTime(2, bus.getArrivalTime());
+			ps.setInt(3, bus.getRouteId());
+			ps.setInt(4, bus.getScheduleId());
+			ps.setBoolean(5, bus.isAc());
+			ps.setInt(6, bus.getCapacity());
+			ps.setInt(7, bus.getId());
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new PersistenceException(e.getMessage());
+		}
+	}
 
 	public Bus getBus(int id) throws PersistenceException {
 		try (Connection conn = ConnectionUtil.getConnection();
@@ -71,27 +95,6 @@ public class BusDAO {
 		return list;
 	}
 
-	public void updateBus(Bus bus) throws PersistenceException {
-		Bus existingBus = getBus(bus.getId());
-		if (existingBus == null) {
-			throw new RuntimeException("Invalid Bus Id");
-		}
-		try (Connection conn = ConnectionUtil.getConnection();
-			 PreparedStatement ps = conn.prepareStatement(
-					 "UPDATE buses SET departure_time = ?, arrival_time = ?, route_id = ? schedule_id = ? WHERE bus_id = ?"
-			 )
-		) {
-			ps.setTime(1, bus.getDepartureTime());
-			ps.setTime(2, bus.getArrivalTime());
-			ps.setInt(3, bus.getRouteId());
-			ps.setInt(4, bus.getScheduleId());
-			ps.setInt(5, bus.getId());
-			ps.executeUpdate();
-		} catch (SQLException e) {
-			throw new PersistenceException(e.getMessage());
-		}
-	}
-
 	public void switchBusStatus(int id) throws PersistenceException {
 		Bus existingBus = getBus(id);
 		if (existingBus == null) {
@@ -99,7 +102,7 @@ public class BusDAO {
 		}
 		try (Connection conn = ConnectionUtil.getConnection();
 			 PreparedStatement ps = conn.prepareStatement(
-					 "UPDATE buses SET is_active = NOT is_active WHERE bus_id = ?"
+					 "UPDATE buses SET is_active = 0 WHERE bus_id = ?"
 			 )
 		) {
 			ps.setInt(1, id);
@@ -107,6 +110,7 @@ public class BusDAO {
 		} catch (SQLException e) {
 			throw new PersistenceException(e.getMessage());
 		}
+		
 	}
 
 	private Bus extractBusFromResultSet(ResultSet rs) throws SQLException {

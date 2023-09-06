@@ -24,6 +24,17 @@ public class RouteServices {
             throw new ServicesException(e.getMessage());
         }
     }
+    
+    public void updateRoute(Route route) throws ServicesException {
+        try {
+            RouteValidator.validate(route);
+
+            routeDAO.updateRoute(route);
+        } catch (ValidationException | PersistenceException e) {
+            throw new ServicesException(e.getMessage());
+        }
+    }
+
 
     public List<Route> getAllRoutes() throws ServicesException {
         try {

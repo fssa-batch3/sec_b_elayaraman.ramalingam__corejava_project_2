@@ -72,7 +72,7 @@ public class BusScheduleDAO {
         List<BusSchedule> list = new ArrayList<>();
 
         try {
-            String query = "SELECT * FROM bus_schedules";
+            String query = "SELECT * FROM bus_schedules WHERE is_active = 1";
             conn = ConnectionUtil.getConnection();
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
