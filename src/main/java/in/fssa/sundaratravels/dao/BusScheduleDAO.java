@@ -57,6 +57,7 @@ public class BusScheduleDAO {
                 busSchedule = extractBusScheduleFromResultSet(rs);
             }
         } catch (SQLException e) {
+        	
             System.out.println(e.getMessage());
             throw new PersistenceException(e.getMessage());
         } finally {
