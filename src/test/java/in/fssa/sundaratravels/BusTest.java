@@ -56,7 +56,7 @@ public class BusTest {
 		Bus bus = new Bus();
 
 		bus.setBusNo("TN77F1934");
-		bus.setDepartureTime(null); // Invalid time
+		bus.setDepartureTime(null); 
 		bus.setArrivalTime(Time.valueOf("15:00:00"));
 		bus.setAc(true);
 		bus.setRouteId(1);
@@ -77,7 +77,7 @@ public class BusTest {
 
 		bus.setBusNo("TN77F1934");
 		bus.setDepartureTime(Time.valueOf("15:00:00"));
-		bus.setArrivalTime(null); // Invalid time
+		bus.setArrivalTime(null);
 		bus.setAc(true);
 		bus.setRouteId(1);
 
@@ -115,7 +115,7 @@ public class BusTest {
 		Bus bus = new Bus();
 		bus.setBusNo("TN99ER1731");
 		bus.setDepartureTime(null);
-		bus.setArrivalTime(Time.valueOf("01:11:11"));   // Replace with a valid time
+		bus.setArrivalTime(Time.valueOf("01:11:11"));   
 		bus.setAc(true);
 		bus.setRouteId(1);
 		bus.setCapacity(42);
@@ -134,7 +134,7 @@ public class BusTest {
 	public void testMissingArrivalTime() {
 		Bus bus = new Bus();
 		bus.setBusNo("TN99ER1731");
-		bus.setDepartureTime(Time.valueOf("01:11:11")); // Replace with a valid time
+		bus.setDepartureTime(Time.valueOf("01:11:11")); 
 		bus.setArrivalTime(null);
 		bus.setAc(true);
 		bus.setRouteId(1);
@@ -158,7 +158,7 @@ public class BusTest {
 		bus.setArrivalTime(Time.valueOf("11:00:00"));
 		bus.setAc(true);
 		bus.setRouteId(1);
-		bus.setCapacity(-42); // Negative capacity
+		bus.setCapacity(-42);
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
 			BusValidator.validate(bus);
@@ -174,7 +174,7 @@ public class BusTest {
 		bus.setArrivalTime(Time.valueOf("11:00:00"));
 		bus.setAc(true);
 		bus.setRouteId(1);
-		bus.setCapacity(0); // Zero capacity
+		bus.setCapacity(0);
 
 		Exception exception = assertThrows(ValidationException.class, () -> {
 			BusValidator.validate(bus);
