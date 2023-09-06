@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Time;
 
+import in.fssa.sundaratravels.exception.ServicesException;
 import in.fssa.sundaratravels.exception.ValidationException;
 import in.fssa.sundaratravels.validator.BusValidator;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ public class BusTest {
 	final BusServices services = new BusServices();
 
 	@Test
-	public void testCreateBusWithValidInput() {
+	public void testCreateBusWithValidInput() throws ServicesException {
 
 		String Busno = generateRandomBusNumber();
 		System.out.println(Busno);
@@ -30,6 +31,8 @@ public class BusTest {
 		bus.setRouteId(1);
 		bus.setCapacity(42);
 		bus.setScheduleId(1);
+
+		System.out.println(bus.toString());
 
 		assertDoesNotThrow(() -> {
 			services.createBus(bus);

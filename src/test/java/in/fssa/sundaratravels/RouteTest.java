@@ -3,6 +3,7 @@ package in.fssa.sundaratravels;
 import in.fssa.sundaratravels.exception.ServicesException;
 import in.fssa.sundaratravels.model.Route;
 import in.fssa.sundaratravels.service.RouteServices;
+import static in.fssa.sundaratravels.util.RandomStringGenerator.generateRandomString;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -66,7 +67,7 @@ public class RouteTest {
     @Test
     public void testValidRoute() {
         Route route = new Route();
-        route.setFromLocation("generateRandomString()");
+        route.setFromLocation(generateRandomString());
         route.setToLocation("Destination");
         route.setBasePrice(BigDecimal.valueOf(100));
 
@@ -194,7 +195,7 @@ public class RouteTest {
     @Test
     public void testGetByToLocationSuccess() {
         assertDoesNotThrow(() -> {
-            List<Route> routes = services.getByToLocation("Destination");
+            List<Route> routes = services.getByToLocation("Chennai");
             assertFalse(routes.isEmpty());
         });
     }
@@ -213,6 +214,24 @@ public class RouteTest {
             Route route = services.getByFromLocationAndTolocation("Salem", "Chennai");
             assertNotNull(route);
         });
+    }
+    @Test
+    public void testUpdateRoutePriceNonexistentRoute() {
+        Exception exception = assertThrows(Exception.class, () -> {
+            services.updateRoutePrice(-1, BigDecimal.valueOf(150));
+        });
+
+        assertEquals("Route with ID -1 does not exist.", exception.getMessage());
+    }
+    @Test
+    public void testUpdateRoutePriceSuccess() throws ServicesException {
+        assertDoesNotThrow(() -> {
+            services.updateRoutePrice(1, BigDecimal.valueOf(150));
+        });
+
+        Route route = services.getRouteById(1);
+
+        assertEquals(BigDecimal.valueOf(150.00).setScale(2), route.getBasePrice());
     }
 
     @Test

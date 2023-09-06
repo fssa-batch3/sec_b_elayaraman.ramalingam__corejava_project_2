@@ -78,13 +78,14 @@ public class BusDAO {
 		}
 		try (Connection conn = ConnectionUtil.getConnection();
 			 PreparedStatement ps = conn.prepareStatement(
-					 "UPDATE buses SET departure_time = ?, arrival_time = ?, route_id = ? WHERE bus_id = ?"
+					 "UPDATE buses SET departure_time = ?, arrival_time = ?, route_id = ? schedule_id = ? WHERE bus_id = ?"
 			 )
 		) {
 			ps.setTime(1, bus.getDepartureTime());
 			ps.setTime(2, bus.getArrivalTime());
 			ps.setInt(3, bus.getRouteId());
-			ps.setInt(4, bus.getId());
+			ps.setInt(4, bus.getScheduleId());
+			ps.setInt(5, bus.getId());
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			throw new PersistenceException(e.getMessage());
@@ -118,6 +119,7 @@ public class BusDAO {
 		bus.setIsActive(rs.getBoolean("is_active"));
 		bus.setRouteId(rs.getInt("route_id"));
 		bus.setCapacity(rs.getInt("capacity"));
+		bus.setScheduleId(rs.getInt("schedule_id"));
 		return bus;
 	}
 

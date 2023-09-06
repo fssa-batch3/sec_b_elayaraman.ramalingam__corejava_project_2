@@ -10,9 +10,9 @@ public class BusScheduleValidator {
             throw new ValidationException("BusSchedule cannot be null");
         }
 
-        if (busSchedule.getBusId() <= 0) {
-            throw new ValidationException("Invalid Bus Id");
-        }
+//        if (busSchedule.getId() <= 0) {
+//            throw new ValidationException("Invalid Id");
+//        }
     }
 
     public static void validate(int id) throws ValidationException{

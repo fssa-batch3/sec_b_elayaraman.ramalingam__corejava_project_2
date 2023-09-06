@@ -5,155 +5,87 @@ import in.fssa.sundaratravels.model.Ticket;
 import in.fssa.sundaratravels.util.ConnectionUtil;
 
 import java.math.BigDecimal;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TicketDAO {
 
-    public void createTicket(Ticket ticket) throws PersistenceException {
+    public int createTicket(int bookingId, java.sql.Date travelDate, int bookedSeats, String passengerName, long phoneNumber, BigDecimal totalPrice) throws PersistenceException {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
+        int ticketId = -1;
 
         try {
+            String query = "INSERT INTO `tickets` (`booking_id`, `travel_date`, `booked_seats`, `passenger_name`, `phone_number`, `total_price`) VALUES (?, ?, ?, ?, ?, ?)";
             conn = ConnectionUtil.getConnection();
-            conn.setAutoCommit(false); // Begin transaction
-
-            int bookingId = ticket.getBookingId();
-            int bookedSeats = ticket.getBookedSeats();
-            BigDecimal totalPrice = calculateTotalPrice(ticket.getTravelDate(), bookedSeats);
-
-            if (bookingId == 0) { // New booking required for a new ticket
-                ps = conn.prepareStatement(
-                        "INSERT INTO bookings (bus_id, travel_date, booked_seats) VALUES (?, ?, ?)",
-                        Statement.RETURN_GENERATED_KEYS
-                );
-                ps.setInt(1, ticket.getBookingId()); // Replace with the actual bus ID
-                ps.setDate(2, new java.sql.Date(ticket.getTravelDate().getTime()));
-                ps.setInt(3, bookedSeats);
-                ps.executeUpdate();
-
-                rs = ps.getGeneratedKeys();
-                if (rs.next()) {
-                    bookingId = rs.getInt(1);
-                }
-            } else { // Update existing booking's seat count
-                ps = conn.prepareStatement(
-                        "UPDATE bookings SET booked_seats = booked_seats + ? WHERE booking_id = ?"
-                );
-                ps.setInt(1, bookedSeats);
-                ps.setInt(2, bookingId);
-                ps.executeUpdate();
-            }
-
-            ps = conn.prepareStatement(
-                    "INSERT INTO tickets (booking_id, travel_date, booked_seats, total_price) VALUES (?, ?, ?, ?)"
-            );
+            ps = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setInt(1, bookingId);
-            ps.setDate(2, new java.sql.Date(ticket.getTravelDate().getTime()));
+            ps.setDate(2, travelDate);
             ps.setInt(3, bookedSeats);
-            ps.setBigDecimal(4, totalPrice);
+            ps.setString(4, passengerName);
+            ps.setLong(5, phoneNumber);
+            ps.setBigDecimal(6, totalPrice);
+
             ps.executeUpdate();
 
-            conn.commit(); // Commit transaction
-        } catch (SQLException e) {
-            if (conn != null) {
-                try {
-                    conn.rollback(); // Rollback transaction on error
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
-            throw new PersistenceException(e.getMessage());
-        } finally {
-            ConnectionUtil.close(conn, ps, rs);
-        }
-    }
-
-    public List<Ticket> getAllTickets() throws PersistenceException {
-        List<Ticket> list = new ArrayList<>();
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-            conn = ConnectionUtil.getConnection();
-            ps = conn.prepareStatement("SELECT * FROM tickets");
-            rs = ps.executeQuery();
-
-            while (rs.next()) {
-                list.add(extractTicketFromResultSet(rs));
+            rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                ticketId = rs.getInt(1);
             }
         } catch (SQLException e) {
             throw new PersistenceException(e.getMessage());
         } finally {
             ConnectionUtil.close(conn, ps, rs);
         }
-        return list;
+        return ticketId;
     }
 
-    public List<Ticket> getTicketsByDate(Date travelDate) throws PersistenceException {
-        List<Ticket> list = new ArrayList<>();
+    public Ticket getTicketById(int ticketId) throws PersistenceException {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
+        Ticket ticket = null;
 
         try {
+            String query = "SELECT * FROM `tickets` WHERE `ticket_id` = ?";
             conn = ConnectionUtil.getConnection();
-            ps = conn.prepareStatement("SELECT * FROM tickets WHERE travel_date = ?");
-            ps.setDate(1, travelDate);
-            rs = ps.executeQuery();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, ticketId);
 
-            while (rs.next()) {
-                list.add(extractTicketFromResultSet(rs));
-            }
-        } catch (SQLException e) {
-            throw new PersistenceException(e.getMessage());
-        } finally {
-            ConnectionUtil.close(conn, ps, rs);
-        }
-        return list;
-    }
-
-    public Ticket getTicketByNumber(int ticketNumber) throws PersistenceException {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-            conn = ConnectionUtil.getConnection();
-            ps = conn.prepareStatement("SELECT * FROM tickets WHERE ticket_id = ?");
-            ps.setInt(1, ticketNumber);
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                return extractTicketFromResultSet(rs);
+                ticket = extractTicketFromResultSet(rs);
             }
         } catch (SQLException e) {
             throw new PersistenceException(e.getMessage());
         } finally {
             ConnectionUtil.close(conn, ps, rs);
         }
-        return null;
+        return ticket;
     }
 
-    public List<Ticket> getTicketsByBusNo(String busNo) throws PersistenceException {
-        List<Ticket> list = new ArrayList<>();
+    public List<Ticket> getAllTickets() throws PersistenceException {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
+        List<Ticket> list = new ArrayList<>();
 
         try {
+            String query = "SELECT * FROM `tickets` WHERE `is_active` = TRUE";
             conn = ConnectionUtil.getConnection();
-            ps = conn.prepareStatement(
-                    "SELECT t.* FROM tickets t JOIN bookings b ON t.booking_id = b.booking_id JOIN buses bu ON b.bus_id = bu.bus_id WHERE bu.bus_no = ?"
-            );
-            ps.setString(1, busNo);
+            ps = conn.prepareStatement(query);
+
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                list.add(extractTicketFromResultSet(rs));
+                Ticket ticket = extractTicketFromResultSet(rs);
+                list.add(ticket);
             }
         } catch (SQLException e) {
             throw new PersistenceException(e.getMessage());
@@ -163,18 +95,50 @@ public class TicketDAO {
         return list;
     }
 
-    private BigDecimal calculateTotalPrice(Date travelDate, int bookedSeats) {
-        // Logic to calculate total price based on travel date, booked seats, and bus type (AC/Non-AC)
-        // Replace with your actual pricing logic
-        return BigDecimal.ZERO; // Replace with the calculated total price
+    public void updateTicket(int ticketId, boolean status) throws PersistenceException {
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            String query = "UPDATE `tickets` SET `is_active` = ? WHERE `ticket_id` = ?";
+            conn = ConnectionUtil.getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setBoolean(1,status );
+            ps.setInt(2, ticketId);
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new PersistenceException(e.getMessage());
+        } finally {
+            ConnectionUtil.close(conn, ps);
+        }
+    }
+
+    public void switchTicketStatus(int ticketId) throws PersistenceException {
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            String query = "UPDATE `tickets` SET `is_active` = NOT `is_active` WHERE `ticket_id` = ?";
+            conn = ConnectionUtil.getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, ticketId);
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new PersistenceException(e.getMessage());
+        } finally {
+            ConnectionUtil.close(conn, ps);
+        }
     }
 
     private Ticket extractTicketFromResultSet(ResultSet rs) throws SQLException {
         Ticket ticket = new Ticket();
-        ticket.setId(rs.getInt("ticket_id"));
+        ticket.setTicketId(rs.getInt("ticket_id"));
         ticket.setBookingId(rs.getInt("booking_id"));
-        ticket.setTravelDate(rs.getDate("travel_date"));
         ticket.setBookedSeats(rs.getInt("booked_seats"));
+        ticket.setPassengerName(rs.getString("passenger_name"));
+        ticket.setPhoneNumber(rs.getLong("phone_number"));
         ticket.setTotalPrice(rs.getBigDecimal("total_price"));
         return ticket;
     }

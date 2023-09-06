@@ -2,7 +2,6 @@ package in.fssa.sundaratravels.model;
 
 public class BusSchedule {
     private int id;
-    private int busId;
     private boolean monday;
     private boolean tuesday;
     private boolean wednesday;
@@ -10,6 +9,16 @@ public class BusSchedule {
     private boolean friday;
     private boolean saturday;
     private boolean sunday;
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    private boolean isActive;
 
     // Getters and setters
 
@@ -19,14 +28,6 @@ public class BusSchedule {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getBusId() {
-        return busId;
-    }
-
-    public void setBusId(int busId) {
-        this.busId = busId;
     }
 
     public boolean isMonday() {

@@ -1,62 +1,63 @@
 package in.fssa.sundaratravels.service;
 
-import com.google.protobuf.ServiceException;
 import in.fssa.sundaratravels.dao.BookingDAO;
+import in.fssa.sundaratravels.dao.BusDAO;
+import in.fssa.sundaratravels.dao.RouteDAO;
+import in.fssa.sundaratravels.dao.TicketDAO;
 import in.fssa.sundaratravels.exception.PersistenceException;
+import in.fssa.sundaratravels.exception.ServicesException;
 import in.fssa.sundaratravels.exception.ValidationException;
 import in.fssa.sundaratravels.model.Booking;
+import in.fssa.sundaratravels.model.Bus;
+import in.fssa.sundaratravels.model.Route;
+import in.fssa.sundaratravels.model.Ticket;
 import in.fssa.sundaratravels.validator.BookingValidator;
+import in.fssa.sundaratravels.validator.TicketValidator;
 
+import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.List;
 
 public class BookingServices {
 
-    private final BookingDAO bookingDAO = new BookingDAO();
+    RouteDAO routeDAO = new RouteDAO();
 
-    public void createBooking(Booking booking) throws ServiceException {
-        try {
-            BookingValidator.validate(booking);
-            bookingDAO.createBooking(booking);
-        } catch (PersistenceException | ValidationException e) {
-            e.printStackTrace();
-            throw new ServiceException(e.getMessage());
-        }
-    }
+    BusDAO busDAO = new BusDAO();
 
-    public List<Booking> getAllBookings() throws ServiceException {
+    BookingDAO bookingDAO = new BookingDAO();
+    TicketDAO ticketDAO = new TicketDAO();
+
+    public void createTicket(int busId, Date travelDate, int bookedSeats, String passengerName, long phoneNumber) throws ServicesException, ServicesException {
         try {
-            return bookingDAO.getAllBookings();
+            Booking booking = null;
+            int bookingId = 0;
+            booking = bookingDAO.getBookingByBusAndDate(booking.getBusId(), booking.getTravelDate());
+
+            if (booking == null) {
+                booking.setTravelDate(travelDate);
+                booking.setBusId(busId);
+                booking.setBookedSeats(bookedSeats);
+                BookingValidator.validate(booking);
+                bookingId = bookingDAO.createBooking(booking);
+            }
+            bookingId = booking.getId();
+            Bus bus = busDAO.getBus(busId);
+            Route route = routeDAO.getRouteById(bus.getRouteId());
+            BigDecimal basePrice = route.getBasePrice();
+            BigDecimal totalPrice = basePrice.multiply(BigDecimal.valueOf(bookedSeats));
+            Ticket ticket = new Ticket();
+            ticket.setBookingId(bookingId);
+            ticket.setBookedSeats(bookedSeats);
+            ticket.setPassengerName(passengerName);
+            ticket.setPhoneNumber(phoneNumber);
+            ticket.setTotalPrice(totalPrice);
+            ticketDAO.createTicket(bookingId, travelDate, bookedSeats, passengerName, phoneNumber, totalPrice);
         } catch (PersistenceException e) {
             e.printStackTrace();
-            throw new ServiceException(e.getMessage());
+            throw new ServicesException(e.getMessage());
+        } catch (ValidationException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public List<Booking> getBookingsByDate(Date travelDate) throws ServiceException {
-        try {
-            return bookingDAO.getBookingsByDate(travelDate);
-        } catch (PersistenceException e) {
-            e.printStackTrace();
-            throw new ServiceException(e.getMessage());
-        }
-    }
 
-    public List<Booking> getBookingsByBusId(int busId) throws ServiceException {
-        try {
-            return bookingDAO.getBookingsByBusId(busId);
-        } catch (PersistenceException e) {
-            e.printStackTrace();
-            throw new ServiceException(e.getMessage());
-        }
-    }
-
-    public List<Booking> getBookingsByDateAndBusId(Date travelDate, int busId) throws ServiceException {
-        try {
-            return bookingDAO.getBookingsByDateAndBusId(travelDate, busId);
-        } catch (PersistenceException e) {
-            e.printStackTrace();
-            throw new ServiceException(e.getMessage());
-        }
-    }
 }

@@ -8,7 +8,7 @@ public abstract class RouteEntity {
 		return routeId;
 	}
 	public void setRouteId(int routeId) {
-		routeId = routeId;
+		this.routeId = routeId;
 	}
 	public String getFromLocation() {
 		return fromLocation;
@@ -39,7 +39,16 @@ public abstract class RouteEntity {
 	private String fromLocation;
 	private String toLocation;
 	private BigDecimal basePrice;
-	
+
+	public boolean isActive(boolean isActive) {
+		return this.isActive;
+	}
+
+	public void setActive(boolean active) {
+		isActive = active;
+	}
+
+	private boolean isActive;
 	
 
 }

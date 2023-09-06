@@ -8,6 +8,16 @@ public class Booking {
     private Date travelDate;
     private int bookedSeats;
 
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    private boolean isActive;
+
     public int getId() {
         return id;
     }

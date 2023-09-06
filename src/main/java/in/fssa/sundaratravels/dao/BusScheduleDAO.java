@@ -18,18 +18,17 @@ public class BusScheduleDAO {
         PreparedStatement ps = null;
 
         try {
-            String query = "INSERT INTO bus_schedules (schedule_id, monday, tuesday, wednesday, thursday, friday, saturday, sunday) " +
-                    "VALUES(?,?,?,?,?,?,?,?)";
+            String query = "INSERT INTO bus_schedules (monday, tuesday, wednesday, thursday, friday, saturday, sunday) " +
+                    "VALUES(?,?,?,?,?,?,?)"; // Remove the bus_id column
             conn = ConnectionUtil.getConnection();
             ps = conn.prepareStatement(query);
-            ps.setInt(1, busSchedule.getBusId());
-            ps.setBoolean(2, busSchedule.isMonday());
-            ps.setBoolean(3, busSchedule.isTuesday());
-            ps.setBoolean(4, busSchedule.isWednesday());
-            ps.setBoolean(5, busSchedule.isThursday());
-            ps.setBoolean(6, busSchedule.isFriday());
-            ps.setBoolean(7, busSchedule.isSaturday());
-            ps.setBoolean(8, busSchedule.isSunday());
+            ps.setBoolean(1, busSchedule.isMonday());
+            ps.setBoolean(2, busSchedule.isTuesday());
+            ps.setBoolean(3, busSchedule.isWednesday());
+            ps.setBoolean(4, busSchedule.isThursday());
+            ps.setBoolean(5, busSchedule.isFriday());
+            ps.setBoolean(6, busSchedule.isSaturday());
+            ps.setBoolean(7, busSchedule.isSunday());
 
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -39,6 +38,7 @@ public class BusScheduleDAO {
             ConnectionUtil.close(conn, ps);
         }
     }
+
 
     public BusSchedule getBusSchedule(int id) throws PersistenceException {
         Connection conn = null;
@@ -122,7 +122,7 @@ public class BusScheduleDAO {
         PreparedStatement ps = null;
 
         try {
-            String query = "DELETE FROM bus_schedules WHERE schedule_id=?";
+            String query = "UPDATE bus_schedules SET is_active = 0 WHERE schedule_id=?";
             conn = ConnectionUtil.getConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, id);
@@ -138,8 +138,7 @@ public class BusScheduleDAO {
 
     private BusSchedule extractBusScheduleFromResultSet(ResultSet rs) throws SQLException {
         BusSchedule busSchedule = new BusSchedule();
-        busSchedule.setId(rs.getInt("id"));
-        busSchedule.setBusId(rs.getInt("bus_id"));
+        busSchedule.setId(rs.getInt("schedule_id"));
         busSchedule.setMonday(rs.getBoolean("monday"));
         busSchedule.setTuesday(rs.getBoolean("tuesday"));
         busSchedule.setWednesday(rs.getBoolean("wednesday"));

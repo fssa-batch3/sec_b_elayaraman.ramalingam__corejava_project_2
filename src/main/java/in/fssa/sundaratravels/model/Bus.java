@@ -3,7 +3,14 @@ package in.fssa.sundaratravels.model;
 import java.sql.Time;
 
 public class Bus {
-    private String busNo;
+    @Override
+	public String toString() {
+		return "Bus [busNo=" + busNo + ", id=" + id + ", isActive=" + isActive + ", scheduleId=" + scheduleId
+				+ ", routeId=" + routeId + ", departureTime=" + departureTime + ", arrivalTime=" + arrivalTime
+				+ ", isAc=" + isAc + ", capacity=" + capacity + "]";
+	}
+
+	private String busNo;
     private int id;
     private boolean isActive;
     private int scheduleId;

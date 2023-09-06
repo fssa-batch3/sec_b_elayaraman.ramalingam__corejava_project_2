@@ -4,18 +4,47 @@ import java.math.BigDecimal;
 import java.sql.Date;
 
 public class Ticket {
-    private int id;
+    private int ticketId;
     private int bookingId;
     private Date travelDate;
     private int bookedSeats;
     private BigDecimal totalPrice;
 
-    public int getId() {
-        return id;
+    public String getPassengerName() {
+        return passengerName;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setPassengerName(String passengerName) {
+        this.passengerName = passengerName;
+    }
+
+    public long getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(long phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    private String passengerName;
+    private long phoneNumber;
+
+    private boolean isActive;
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public int getTicketId() {
+        return ticketId;
+    }
+
+    public void setTicketId(int id) {
+        this.ticketId = id;
     }
 
     public int getBookingId() {
@@ -55,7 +84,7 @@ public class Ticket {
     @Override
     public String toString() {
         return "Ticket{" +
-                "id=" + id +
+                "id=" + ticketId +
                 ", bookingId=" + bookingId +
                 ", travelDate=" + travelDate +
                 ", bookedSeats=" + bookedSeats +
