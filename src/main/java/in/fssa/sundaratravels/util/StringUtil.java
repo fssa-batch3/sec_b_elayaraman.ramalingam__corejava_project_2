@@ -21,7 +21,4 @@ public class StringUtil {
         return !StringUtil.isValidString(input);
     }
 
-    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    private static final int LENGTH = 10;
-
 }

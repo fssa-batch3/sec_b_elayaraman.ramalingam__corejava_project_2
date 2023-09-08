@@ -18,7 +18,6 @@ public class RouteServices {
     public void createRoute(Route route) throws ServicesException {
         try {
             RouteValidator.validate(route);
-
             routeDAO.createRoute(route);
         } catch (ValidationException | PersistenceException e) {
             throw new ServicesException(e.getMessage());
@@ -86,7 +85,7 @@ public class RouteServices {
 
     public void deleteRoute(int id) throws ServicesException {
         try {
-            routeDAO.deleteRoute(id);
+            routeDAO.switchRouteStatus(id);
         } catch (PersistenceException e) {
             throw new ServicesException(e.getMessage());
         }

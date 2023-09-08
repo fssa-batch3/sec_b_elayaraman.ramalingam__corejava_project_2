@@ -30,6 +30,7 @@ New route can be added to the table
 ##### Form validation
 - [ ] From Location
 - [ ] To Location
+- [ ] Base Price
 ##### Business Validation
 - [ ] Check for routes with the same 'from' and 'to' locations in the table.
 

@@ -19,7 +19,7 @@ public class BusScheduleDAO {
 
         try {
             String query = "INSERT INTO bus_schedules (monday, tuesday, wednesday, thursday, friday, saturday, sunday) " +
-                    "VALUES(?,?,?,?,?,?,?)"; // Remove the bus_id column
+                    "VALUES(?,?,?,?,?,?,?)";
             conn = ConnectionUtil.getConnection();
             ps = conn.prepareStatement(query);
             ps.setBoolean(1, busSchedule.isMonday());

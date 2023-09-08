@@ -221,17 +221,17 @@ public class RouteDAO {
         return list;
     }
 
-    public void deleteRoute(int id) throws PersistenceException {
+    public void switchRouteStatus(int id) throws PersistenceException {
         Connection conn = null;
         PreparedStatement ps = null;
 
         try {
-            String query = "UPDATE routes SET is_active = 0 WHERE route_id = ?";
+            String query = "UPDATE routes SET is_active = not is_active WHERE route_id = ?";
             conn = ConnectionUtil.getConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, id);
             ps.executeUpdate();
-            System.out.println("Route deleted");
+            System.out.println("Route status changed");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             throw new PersistenceException(e.getMessage());
