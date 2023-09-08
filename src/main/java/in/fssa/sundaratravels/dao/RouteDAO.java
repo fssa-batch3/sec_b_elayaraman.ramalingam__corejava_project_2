@@ -16,6 +16,10 @@ import static in.fssa.sundaratravels.util.ConnectionUtil.getConnection;
 
 public class RouteDAO {
 
+    /**
+     * @param route
+     * @throws PersistenceException
+     */
     public void createRoute(Route route) throws PersistenceException {
         Connection conn = null;
         PreparedStatement ps = null;
