@@ -20,6 +20,7 @@ public class ConnectionUtil {
         //username = System.getenv("DATABASE_USERNAME");
         //password = System.getenv("DATABASE_PASSWORD");
 
+
         if(url == null) {
 			url = "jdbc:mysql://127.0.0.1:3306/sundaratravels";
         }
@@ -32,6 +33,7 @@ public class ConnectionUtil {
         if(password == null) {
   		password = "Elaya@007";
         }
+
 
         Connection connection = null;
 
