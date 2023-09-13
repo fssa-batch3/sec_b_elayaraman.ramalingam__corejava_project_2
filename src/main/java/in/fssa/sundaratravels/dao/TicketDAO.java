@@ -14,22 +14,21 @@ import java.util.List;
 
 public class TicketDAO {
 
-    public int createTicket(int bookingId, java.sql.Date travelDate, int bookedSeats, String passengerName, long phoneNumber, BigDecimal totalPrice) throws PersistenceException {
+    public int createTicket(Ticket ticket) throws PersistenceException {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         int ticketId = -1;
-
         try {
             String query = "INSERT INTO `tickets` (`booking_id`, `travel_date`, `booked_seats`, `passenger_name`, `phone_number`, `total_price`) VALUES (?, ?, ?, ?, ?, ?)";
             conn = ConnectionUtil.getConnection();
             ps = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, bookingId);
-            ps.setDate(2, travelDate);
-            ps.setInt(3, bookedSeats);
-            ps.setString(4, passengerName);
-            ps.setLong(5, phoneNumber);
-            ps.setBigDecimal(6, totalPrice);
+            ps.setInt(1, ticket.getBookingId());
+            ps.setDate(2, ticket.getTravelDate());
+            ps.setInt(3, ticket.getBookedSeats());
+            ps.setString(4, ticket.getPassengerName());
+            ps.setLong(5, ticket.getPhoneNumber());
+            ps.setBigDecimal(6, ticket.getTotalPrice());
 
             ps.executeUpdate();
 
@@ -95,16 +94,15 @@ public class TicketDAO {
         return list;
     }
 
-    public void updateTicket(int ticketId, boolean status) throws PersistenceException {
+    public void cancelTicket(int ticketId) throws PersistenceException {
         Connection conn = null;
         PreparedStatement ps = null;
 
         try {
-            String query = "UPDATE `tickets` SET `is_active` = ? WHERE `ticket_id` = ?";
+            String query = "UPDATE `tickets` SET `is_active` = 0 WHERE `ticket_id` = ?";
             conn = ConnectionUtil.getConnection();
             ps = conn.prepareStatement(query);
-            ps.setBoolean(1,status );
-            ps.setInt(2, ticketId);
+            ps.setInt(1, ticketId);
 
             ps.executeUpdate();
         } catch (SQLException e) {

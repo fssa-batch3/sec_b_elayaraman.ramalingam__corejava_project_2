@@ -13,6 +13,7 @@ import in.fssa.sundaratravels.model.Route;
 import in.fssa.sundaratravels.model.Ticket;
 import in.fssa.sundaratravels.validator.BookingValidator;
 import in.fssa.sundaratravels.validator.TicketValidator;
+import in.fssa.sundaratravels.util.NumUtil;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -26,31 +27,35 @@ public class BookingServices {
     BookingDAO bookingDAO = new BookingDAO();
     TicketDAO ticketDAO = new TicketDAO();
 
-    public void createTicket(int busId, Date travelDate, int bookedSeats, String passengerName, long phoneNumber) throws ServicesException, ServicesException {
+    public void bookTicket(int busId, Date travelDate, int bookedSeats, String passengerName, long phoneNumber) throws ServicesException, ServicesException {
         try {
             Booking booking = null;
             int bookingId = 0;
-            booking = bookingDAO.getBookingByBusAndDate(booking.getBusId(), booking.getTravelDate());
+            booking = bookingDAO.getBookingByBusAndDate(busId, travelDate);
 
             if (booking == null) {
+                booking = new Booking();
                 booking.setTravelDate(travelDate);
                 booking.setBusId(busId);
                 booking.setBookedSeats(bookedSeats);
                 BookingValidator.validate(booking);
                 bookingId = bookingDAO.createBooking(booking);
+            } else {
+                bookingId = booking.getId();
+                bookingDAO.updateBooking(bookingId, booking.getBookedSeats() + bookedSeats);
             }
-            bookingId = booking.getId();
             Bus bus = busDAO.getBus(busId);
             Route route = routeDAO.getRouteById(bus.getRouteId());
-            BigDecimal basePrice = route.getBasePrice();
-            BigDecimal totalPrice = basePrice.multiply(BigDecimal.valueOf(bookedSeats));
+            BigDecimal totalPrice = route.getBasePrice().multiply(BigDecimal.valueOf(bookedSeats));
             Ticket ticket = new Ticket();
             ticket.setBookingId(bookingId);
             ticket.setBookedSeats(bookedSeats);
+            ticket.setTravelDate(travelDate);
             ticket.setPassengerName(passengerName);
             ticket.setPhoneNumber(phoneNumber);
             ticket.setTotalPrice(totalPrice);
-            ticketDAO.createTicket(bookingId, travelDate, bookedSeats, passengerName, phoneNumber, totalPrice);
+            TicketValidator.validate(ticket);
+            ticketDAO.createTicket(ticket);
         } catch (PersistenceException e) {
             e.printStackTrace();
             throw new ServicesException(e.getMessage());
@@ -58,6 +63,26 @@ public class BookingServices {
             throw new RuntimeException(e);
         }
     }
+
+    public void cancelTicket(int ticketId){
+
+        try{
+            NumUtil.rejectIfInvalidNum(ticketId,"Ticket Id");
+            Ticket ticket = ticketDAO.getTicketById(ticketId);
+            int bookingId = ticket.getBookingId();
+            Booking booking = bookingDAO.getBookingById(bookingId);
+            bookingDAO.updateBooking(bookingId,booking.getBookedSeats()-ticket.getBookedSeats());
+            ticketDAO.cancelTicket(ticketId);
+        } catch (ValidationException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+
+    }
+
 
 
 }

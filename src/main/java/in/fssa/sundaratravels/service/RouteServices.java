@@ -83,7 +83,7 @@ public class RouteServices {
         }
     }
 
-    public void deleteRoute(int id) throws ServicesException {
+    public void switchRouteStatus(int id) throws ServicesException {
         try {
             routeDAO.switchRouteStatus(id);
         } catch (PersistenceException e) {

@@ -207,6 +207,12 @@ public class RouteTest {
             assertTrue(routes.isEmpty());
         });
     }
+    
+    public void testRouteStatusChangeSuccess() {
+    	assertDoesNotThrow(()->{
+    		services.switchRouteStatus(1);
+    	});
+    }
 
     @Test
     public void testGetByFromLocationAndToLocationSuccess() {
