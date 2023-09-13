@@ -83,6 +83,17 @@ public class BookingServices {
 
     }
 
+    public void getAllTickets() throws PersistenceException {
+        try{
+            ticketDAO.getAllTickets();
+        }catch (PersistenceException e){
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+
+
 
 
 }
