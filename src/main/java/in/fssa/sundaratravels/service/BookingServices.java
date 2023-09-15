@@ -4,19 +4,18 @@ import in.fssa.sundaratravels.dao.BookingDAO;
 import in.fssa.sundaratravels.dao.BusDAO;
 import in.fssa.sundaratravels.dao.RouteDAO;
 import in.fssa.sundaratravels.dao.TicketDAO;
-import in.fssa.sundaratravels.exception.PersistenceException;
-import in.fssa.sundaratravels.exception.ServicesException;
-import in.fssa.sundaratravels.exception.ValidationException;
 import in.fssa.sundaratravels.model.Booking;
 import in.fssa.sundaratravels.model.Bus;
 import in.fssa.sundaratravels.model.Route;
 import in.fssa.sundaratravels.model.Ticket;
-import in.fssa.sundaratravels.validator.BookingValidator;
-import in.fssa.sundaratravels.validator.TicketValidator;
 import in.fssa.sundaratravels.util.NumUtil;
+import in.fssa.sundaratravels.validator.BookingValidator;
+import in.fssa.sundaratravels.validator.*;
+import in.fssa.sundaratravels.exception.*;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.List;
 
 public class BookingServices {
 
@@ -42,6 +41,7 @@ public class BookingServices {
                 bookingId = bookingDAO.createBooking(booking);
             } else {
                 bookingId = booking.getId();
+                BookingValidator.validate(booking, bookedSeats);
                 bookingDAO.updateBooking(bookingId, booking.getBookedSeats() + bookedSeats);
             }
             Bus bus = busDAO.getBus(busId);
@@ -56,15 +56,13 @@ public class BookingServices {
             ticket.setTotalPrice(totalPrice);
             TicketValidator.validate(ticket);
             ticketDAO.createTicket(ticket);
-        } catch (PersistenceException e) {
+        } catch (ValidationException | PersistenceException e) {
             e.printStackTrace();
             throw new ServicesException(e.getMessage());
-        } catch (ValidationException e) {
-            throw new RuntimeException(e);
         }
     }
 
-    public void cancelTicket(int ticketId){
+    public void cancelTicket(int ticketId) throws ServicesException {
 
         try{
             NumUtil.rejectIfInvalidNum(ticketId,"Ticket Id");
@@ -73,22 +71,38 @@ public class BookingServices {
             Booking booking = bookingDAO.getBookingById(bookingId);
             bookingDAO.updateBooking(bookingId,booking.getBookedSeats()-ticket.getBookedSeats());
             ticketDAO.cancelTicket(ticketId);
-        } catch (ValidationException e) {
+        } catch (ValidationException | PersistenceException e) {
             e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
-        } catch (PersistenceException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
+            throw new ServicesException(e.getMessage());
         }
 
     }
-
-    public void getAllTickets() throws PersistenceException {
+    
+    public List<Booking> getAllBookings() throws  ServicesException {
         try{
-            ticketDAO.getAllTickets();
+            return bookingDAO.getAllBookings();
         }catch (PersistenceException e){
             e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
+            throw new ServicesException(e.getMessage());
+        }
+    }
+
+    public List<Ticket> getAllTickets() throws  ServicesException {
+        try{
+            return ticketDAO.getAllTickets();
+        }catch (PersistenceException e){
+            e.printStackTrace();
+            throw new ServicesException(e.getMessage());
+        }
+    }
+
+    public Booking getBookingByBusAndDate(int busId, Date travelDate) throws ServicesException {
+        try {
+            NumUtil.rejectIfInvalidNum(busId, "Bus Id");
+            return bookingDAO.getBookingByBusAndDate(busId, travelDate);
+        } catch (ValidationException | PersistenceException e) {
+            e.printStackTrace();
+            throw new ServicesException(e.getMessage());
         }
     }
 

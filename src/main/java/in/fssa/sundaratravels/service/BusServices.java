@@ -1,12 +1,11 @@
 package in.fssa.sundaratravels.service;
 
+import java.sql.Date;
 import java.util.List;
 
-import in.fssa.sundaratravels.exception.PersistenceException;
-import in.fssa.sundaratravels.exception.ServicesException;
-import in.fssa.sundaratravels.exception.ValidationException;
-import in.fssa.sundaratravels.model.Bus;
 import in.fssa.sundaratravels.dao.BusDAO;
+import in.fssa.sundaratravels.exception.*;
+import in.fssa.sundaratravels.model.Bus;
 import static in.fssa.sundaratravels.validator.BusValidator.validate;
 
 public class BusServices {
@@ -23,7 +22,7 @@ public class BusServices {
         }
     }
 
-    public Bus getBus(int id) throws ServicesException {
+	public Bus getBus(int id) throws ServicesException {
         try{
             validate(id,"Bus");
             return busDAO.getBus(id);
@@ -37,6 +36,16 @@ public class BusServices {
         try{
             return busDAO.getAllBuses();
         }catch (PersistenceException e){
+            e.printStackTrace();
+            throw new ServicesException(e.getMessage());
+        }
+    }
+
+    public List<Bus> getBusesByRouteIdAndDate(int routeId, Date date) throws ServicesException {
+        try {
+            validate(routeId, "Route");
+            return busDAO.getBusesByRouteIdAndDate(routeId, date);
+        } catch (ValidationException | PersistenceException e) {
             e.printStackTrace();
             throw new ServicesException(e.getMessage());
         }

@@ -1,7 +1,12 @@
 package in.fssa.sundaratravels.validator;
 
+import in.fssa.sundaratravels.dao.BusDAO;
+import in.fssa.sundaratravels.exception.PersistenceException;
+import in.fssa.sundaratravels.exception.ServicesException;
 import in.fssa.sundaratravels.exception.ValidationException;
 import in.fssa.sundaratravels.model.Booking;
+import in.fssa.sundaratravels.model.Bus;
+import in.fssa.sundaratravels.service.BusServices;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -31,6 +36,15 @@ public class BookingValidator {
         if (booking.getBookedSeats() <= 0) {
             throw new ValidationException("Invalid booked seats count");
         }
+    }
+    
+    public static void validate(Booking booking, int seats)throws ValidationException, PersistenceException{
+    	BusDAO dao = new BusDAO();
+    	Bus bus = dao.getBus(booking.getBusId());
+    	int availableSeats = bus.getCapacity() - booking.getBookedSeats();
+    	if(seats > availableSeats) {
+    		throw new ValidationException("Not enough seats available for booking");
+    	}
     }
 
     private static LocalDate convertToLocalDate(Date dateToConvert) {

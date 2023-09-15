@@ -1,18 +1,17 @@
 package in.fssa.sundaratravels.util;
 
-import io.github.cdimascio.dotenv.Dotenv;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.mysql.cj.jdbc.JdbcConnection;
+
 public class ConnectionUtil {
 
 	public static Connection getConnection() {
 
-		Dotenv dotenv = Dotenv.load();
 
 		String url = null;
 		String username = null;
@@ -30,16 +29,6 @@ public class ConnectionUtil {
 
 		if(password == null)
 			password = System.getenv("LOCAL_DATABASE_PASSWORD");
-
-		if(url == null)
-			url = dotenv.get("DATABASE_HOSTNAME");
-
-		if(username == null)
-		username = dotenv.get("DATABASE_USERNAME");
-
-		if(password == null)
-		password = dotenv.get("DATABASE_PASSWORD");
-
 
 
 

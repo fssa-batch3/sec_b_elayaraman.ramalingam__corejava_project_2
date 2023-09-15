@@ -135,9 +135,11 @@ public class TicketDAO {
         ticket.setTicketId(rs.getInt("ticket_id"));
         ticket.setBookingId(rs.getInt("booking_id"));
         ticket.setBookedSeats(rs.getInt("booked_seats"));
+        ticket.setTravelDate(rs.getDate("travel_date"));
         ticket.setPassengerName(rs.getString("passenger_name"));
         ticket.setPhoneNumber(rs.getLong("phone_number"));
         ticket.setTotalPrice(rs.getBigDecimal("total_price"));
+        ticket.setActive(rs.getBoolean("is_active"));
         return ticket;
     }
 }

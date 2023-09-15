@@ -20,5 +20,8 @@ public class TicketValidator {
         if (ticket.getTotalPrice().compareTo(BigDecimal.valueOf(0)) <= 0) {
             throw new ValidationException("Invalid total price");
         }
+        if(ticket.getPhoneNumber()<6000000000L || ticket.getPhoneNumber()>9999999999L) {
+        	throw new ValidationException("Invalid phone number");
+        }
     }
 }

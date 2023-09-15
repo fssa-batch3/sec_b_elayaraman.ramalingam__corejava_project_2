@@ -1,6 +1,8 @@
 package in.fssa.sundaratravels.dao;
 
 import java.sql.*;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,8 +92,9 @@ public class BusDAO {
         ResultSet rs = null;
         List<Bus> list = new ArrayList<>();
         try {
+        	conn = ConnectionUtil.getConnection();
     ps = conn.prepareStatement("SELECT * FROM buses WHERE is_active = 1");
-    conn = ConnectionUtil.getConnection();
+    
             rs = ps.executeQuery();
             while (rs.next()) {
                 list.add(extractBusFromResultSet(rs));
@@ -123,6 +126,37 @@ public class BusDAO {
             ConnectionUtil.close(conn, ps, rs);
         }
 
+    }
+
+    public List<Bus> getBusesByRouteIdAndDate(int routeId, Date date) throws PersistenceException {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Bus> list = new ArrayList<>();
+        try {
+            conn = ConnectionUtil.getConnection();
+            LocalDate localDate = date.toLocalDate();
+            DayOfWeek dayOfWeek = localDate.getDayOfWeek();
+
+            String query = "SELECT b.* FROM buses b " +
+                    "INNER JOIN bus_schedules s ON b.schedule_id = s.schedule_id " +
+                    "WHERE b.route_id = ? " +
+                    "AND s." + dayOfWeek.toString().toLowerCase() + " = 1 " +
+                    "AND b.is_active = 1";
+
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, routeId);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                list.add(extractBusFromResultSet(rs));
+            }
+        } catch (SQLException e) {
+            throw new PersistenceException(e.getMessage());
+        } finally {
+            ConnectionUtil.close(conn, ps, rs);
+        }
+        return list;
     }
 
     private Bus extractBusFromResultSet(ResultSet rs) throws SQLException {

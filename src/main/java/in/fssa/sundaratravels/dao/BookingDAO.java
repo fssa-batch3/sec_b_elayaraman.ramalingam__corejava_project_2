@@ -73,7 +73,7 @@ public class BookingDAO {
         List<Booking> list = new ArrayList<>();
 
         try {
-            String query = "SELECT * FROM `bookings` WHERE `is_active` = TRUE";
+            String query = "SELECT * FROM `bookings` WHERE `is_active` = 1";
             conn = ConnectionUtil.getConnection();
             ps = conn.prepareStatement(query);
 

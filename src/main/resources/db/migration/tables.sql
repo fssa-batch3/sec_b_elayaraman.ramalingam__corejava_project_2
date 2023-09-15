@@ -43,7 +43,9 @@ CREATE TABLE `tickets` (
                            `booking_id` INT NOT NULL,
                            `travel_date` DATE NOT NULL,
                            `booked_seats` INT NOT NULL,
-                           `total_price` DECIMAL(10,2) NOT NULL
+                           `total_price` DECIMAL(10,2) NOT NULL,
+                           `passenger_name` VARCHAR(100) NOT NULL,
+                           `phone_number` VARCHAR(10) NOT NULL
 );
 
 ALTER TABLE `buses` ADD FOREIGN KEY (`route_id`) REFERENCES `routes` (`route_id`);
