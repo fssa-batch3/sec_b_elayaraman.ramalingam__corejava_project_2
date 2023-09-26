@@ -138,6 +138,11 @@ public class BusDAO {
             LocalDate localDate = date.toLocalDate();
             DayOfWeek dayOfWeek = localDate.getDayOfWeek();
 
+            System.out.println(routeId);
+            System.out.println(date);
+
+            System.out.println(dayOfWeek.toString().toLowerCase());
+
             String query = "SELECT b.* FROM buses b " +
                     "INNER JOIN bus_schedules s ON b.schedule_id = s.schedule_id " +
                     "WHERE b.route_id = ? " +
@@ -149,7 +154,9 @@ public class BusDAO {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                list.add(extractBusFromResultSet(rs));
+                Bus bus = extractBusFromResultSet(rs);
+                list.add(bus);
+                System.out.println(bus);
             }
         } catch (SQLException e) {
             throw new PersistenceException(e.getMessage());
@@ -173,7 +180,7 @@ public class BusDAO {
         return bus;
     }
 
-    public List<Bus> getAllBusesByRouteId(int routeId) throws Exception {
+    public List<Bus> getAllBusesByRouteId(int routeId) throws PersistenceException {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -192,7 +199,7 @@ public class BusDAO {
             }
         } catch (SQLException | RuntimeException e) {
             System.out.println(e.getMessage());
-            throw new Exception(e);
+            throw new PersistenceException(e.getMessage());
         } finally {
             ConnectionUtil.close(conn, ps, rs);
         }

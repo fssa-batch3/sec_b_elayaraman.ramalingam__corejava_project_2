@@ -69,4 +69,12 @@ public class NumUtil {
         }
         return true;
     }
+
+    public static boolean rejectIfInvalidPhoneNumber(long phone) throws ValidationException {
+        rejectIfInvalidNum(phone,"phone number");
+        if(phone < 6000000000L || phone >9999999999L){
+            throw new ValidationException("Invalid Phone Number");
+        }
+        return true;
+    }
 }

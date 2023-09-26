@@ -5,10 +5,7 @@ import in.fssa.sundaratravels.model.Ticket;
 import in.fssa.sundaratravels.util.ConnectionUtil;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +40,88 @@ public class TicketDAO {
         }
         return ticketId;
     }
+
+    public List<Ticket> getTicketsByPhoneNumberAndDate(long phoneNumber, Date travelDate) throws PersistenceException {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Ticket> list = new ArrayList<>();
+
+        try {
+            String query = "SELECT * FROM `tickets` WHERE `phone_number` = ? AND `travel_date` = ? AND `is_active` = TRUE";
+            conn = ConnectionUtil.getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setLong(1, phoneNumber);
+            ps.setDate(2, travelDate);
+
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Ticket ticket = extractTicketFromResultSet(rs);
+                list.add(ticket);
+            }
+        } catch (SQLException e) {
+            throw new PersistenceException(e.getMessage());
+        } finally {
+            ConnectionUtil.close(conn, ps, rs);
+        }
+        return list;
+    }
+
+    public Ticket getTicketByPhoneNumberDateAndBookingId(long phoneNumber, Date travelDate, int bookingId) throws PersistenceException {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Ticket ticket = null;
+
+        try {
+            String query = "SELECT * FROM `tickets` WHERE `phone_number` = ? AND `travel_date` = ? AND `booking_id` = ? AND `is_active` = TRUE";
+            conn = ConnectionUtil.getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setLong(1, phoneNumber);
+            ps.setDate(2, travelDate);
+            ps.setInt(3, bookingId);
+
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                ticket = extractTicketFromResultSet(rs);
+            }
+        } catch (SQLException e) {
+            throw new PersistenceException(e.getMessage());
+        } finally {
+            ConnectionUtil.close(conn, ps, rs);
+        }
+        return ticket;
+    }
+
+    public static List<Ticket> getTicketByPhoneNumber(long phoneNumber) throws PersistenceException {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Ticket> list = new ArrayList<>();
+
+        try {
+            String query = "SELECT * FROM `tickets` WHERE `phone_number` = ?";
+            conn = ConnectionUtil.getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setLong(1, phoneNumber);
+
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Ticket ticket = extractTicketFromResultSet(rs);
+                System.out.println(ticket);
+                list.add(ticket);
+            }
+        } catch (SQLException e) {
+            throw new PersistenceException(e.getMessage());
+        } finally {
+            ConnectionUtil.close(conn, ps, rs);
+        }
+        return list;
+    }
+
 
     public Ticket getTicketById(int ticketId) throws PersistenceException {
         Connection conn = null;
@@ -130,7 +209,7 @@ public class TicketDAO {
         }
     }
 
-    private Ticket extractTicketFromResultSet(ResultSet rs) throws SQLException {
+    private static Ticket extractTicketFromResultSet(ResultSet rs) throws SQLException {
         Ticket ticket = new Ticket();
         ticket.setTicketId(rs.getInt("ticket_id"));
         ticket.setBookingId(rs.getInt("booking_id"));

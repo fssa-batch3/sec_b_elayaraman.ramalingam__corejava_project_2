@@ -18,4 +18,5 @@ public class PatternUtil {
             throw new ValidationException("Invalid time format for " + type);
         }
     }
+
 }

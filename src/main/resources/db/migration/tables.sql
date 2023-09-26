@@ -47,6 +47,15 @@ CREATE TABLE `tickets` (
                            `passenger_name` VARCHAR(100) NOT NULL,
                            `phone_number` VARCHAR(10) NOT NULL
 );
+CREATE TABLE `users` (
+						    `user_id` INT PRIMARY KEY AUTO_INCREMENT,
+						    `user_name` VARCHAR(100) NOT NULL,
+						    `phone_number` VARCHAR(10) NOT NULL,
+						    `password` VARCHAR(255) NOT NULL,
+						    `is_active` BOOLEAN NOT NULL DEFAULT true, 
+						    `dob` DATE NOT NULL
+);
+
 
 ALTER TABLE `buses` ADD FOREIGN KEY (`route_id`) REFERENCES `routes` (`route_id`);
 

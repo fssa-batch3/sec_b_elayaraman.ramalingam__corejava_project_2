@@ -17,18 +17,18 @@ public class ConnectionUtil {
 		String username = null;
 		String password = null;
 
-		 url = System.getenv("DATABASE_HOSTNAME");
-		 username = System.getenv("DATABASE_USERNAME");
-		 password = System.getenv("DATABASE_PASSWORD");
+//		 url = System.getenv("DATABASE_HOSTNAME");
+//		 username = System.getenv("DATABASE_USERNAME");
+//		 password = System.getenv("DATABASE_PASSWORD");
 
-		if(url == null)
-			url = System.getenv("LOCAL_DATABASE_HOSTNAME");
+        url = System.getenv("LOCAL_DATABASE_HOSTNAME");
+		System.out.println(url);
 
-		if(username == null)
-			username = System.getenv("LOCAL_DATABASE_USERNAME");
+        username = System.getenv("LOCAL_DATABASE_USERNAME");
+		System.out.println(username);
 
-		if(password == null)
-			password = System.getenv("LOCAL_DATABASE_PASSWORD");
+        password = System.getenv("LOCAL_DATABASE_PASSWORD");
+		System.out.println(password);
 
 
 

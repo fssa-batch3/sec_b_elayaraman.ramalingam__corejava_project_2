@@ -17,19 +17,20 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 
+import javax.sql.rowset.serial.SerialException;
+
 public class BookingServices {
 
     RouteDAO routeDAO = new RouteDAO();
-
     BusDAO busDAO = new BusDAO();
-
     BookingDAO bookingDAO = new BookingDAO();
     TicketDAO ticketDAO = new TicketDAO();
 
-    public void bookTicket(int busId, Date travelDate, int bookedSeats, String passengerName, long phoneNumber) throws ServicesException, ServicesException {
+    public int bookTicket(int busId, Date travelDate, int bookedSeats, String passengerName, long phoneNumber) throws ServicesException, ServicesException {
+        int bookingId = 0;
         try {
             Booking booking = null;
-            int bookingId = 0;
+
             booking = bookingDAO.getBookingByBusAndDate(busId, travelDate);
 
             if (booking == null) {
@@ -60,6 +61,7 @@ public class BookingServices {
             e.printStackTrace();
             throw new ServicesException(e.getMessage());
         }
+        return bookingId;
     }
 
     public void cancelTicket(int ticketId) throws ServicesException {
@@ -69,8 +71,9 @@ public class BookingServices {
             Ticket ticket = ticketDAO.getTicketById(ticketId);
             int bookingId = ticket.getBookingId();
             Booking booking = bookingDAO.getBookingById(bookingId);
-            bookingDAO.updateBooking(bookingId,booking.getBookedSeats()-ticket.getBookedSeats());
             ticketDAO.cancelTicket(ticketId);
+            bookingDAO.updateBooking(bookingId,booking.getBookedSeats()-ticket.getBookedSeats());
+            
         } catch (ValidationException | PersistenceException e) {
             e.printStackTrace();
             throw new ServicesException(e.getMessage());
@@ -95,11 +98,30 @@ public class BookingServices {
             throw new ServicesException(e.getMessage());
         }
     }
+    
+    public Booking getBooking(int id)throws ServicesException{
+    	try {
+    		NumUtil.isValidNum(id);
+    		return bookingDAO.getBookingById(id);
+    	}catch(PersistenceException e) {
+    		throw new ServicesException(e.getMessage());
+    	}
+    }
 
     public Booking getBookingByBusAndDate(int busId, Date travelDate) throws ServicesException {
         try {
             NumUtil.rejectIfInvalidNum(busId, "Bus Id");
             return bookingDAO.getBookingByBusAndDate(busId, travelDate);
+        } catch (ValidationException | PersistenceException e) {
+            e.printStackTrace();
+            throw new ServicesException(e.getMessage());
+        }
+    }
+
+    public List<Ticket> getTicketByPhoneNumber(long phonenumber) throws ServicesException {
+        try {
+            NumUtil.rejectIfInvalidPhoneNumber(phonenumber);
+            return TicketDAO.getTicketByPhoneNumber(phonenumber);
         } catch (ValidationException | PersistenceException e) {
             e.printStackTrace();
             throw new ServicesException(e.getMessage());
