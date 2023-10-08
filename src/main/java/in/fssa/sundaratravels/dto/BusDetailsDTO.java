@@ -3,6 +3,7 @@ package in.fssa.sundaratravels.dto;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.HashMap;
 
 public class BusDetailsDTO {
 
@@ -13,8 +14,17 @@ public class BusDetailsDTO {
 	private BigDecimal basePrice;
     private Time departureTime;
     private Time arrivalTime;
+    private HashMap<Integer,Boolean> seats;
     
-    public Time getDepartureTime() {
+    public HashMap<Integer,Boolean> getSeats() {
+		return seats;
+	}
+
+	public void setSeats(HashMap<Integer,Boolean> seats) {
+		this.seats = seats;
+	}
+
+	public Time getDepartureTime() {
         return departureTime;
     }
 

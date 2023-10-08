@@ -22,13 +22,10 @@ public class ConnectionUtil {
 //		 password = System.getenv("DATABASE_PASSWORD");
 
         url = System.getenv("LOCAL_DATABASE_HOSTNAME");
-		System.out.println(url);
 
         username = System.getenv("LOCAL_DATABASE_USERNAME");
-		System.out.println(username);
 
         password = System.getenv("LOCAL_DATABASE_PASSWORD");
-		System.out.println(password);
 
 
 

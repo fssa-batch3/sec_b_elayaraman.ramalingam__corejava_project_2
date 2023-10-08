@@ -26,13 +26,11 @@ public class BookingServices {
     BookingDAO bookingDAO = new BookingDAO();
     TicketDAO ticketDAO = new TicketDAO();
 
-    public int bookTicket(int busId, Date travelDate, int bookedSeats, String passengerName, long phoneNumber) throws ServicesException, ServicesException {
+    public int bookTicket(int busId, Date travelDate, int bookedSeats, String passengerName, long phoneNumber,int[] seats) throws ServicesException, ServicesException {
         int bookingId = 0;
         try {
             Booking booking = null;
-
             booking = bookingDAO.getBookingByBusAndDate(busId, travelDate);
-
             if (booking == null) {
                 booking = new Booking();
                 booking.setTravelDate(travelDate);
@@ -55,6 +53,7 @@ public class BookingServices {
             ticket.setPassengerName(passengerName);
             ticket.setPhoneNumber(phoneNumber);
             ticket.setTotalPrice(totalPrice);
+            ticket.setSeats(seats);
             TicketValidator.validate(ticket);
             ticketDAO.createTicket(ticket);
         } catch (ValidationException | PersistenceException e) {
@@ -96,6 +95,15 @@ public class BookingServices {
         }catch (PersistenceException e){
             e.printStackTrace();
             throw new ServicesException(e.getMessage());
+        }
+    }
+
+    public List<Ticket> getTicketByBookingId(int id) throws ServicesException{
+        try {
+            NumUtil.rejectIfInvalidNum(id,"booking id ");
+            return ticketDAO.getTicketsByBookingId(id);
+        } catch (PersistenceException | ValidationException e) {
+            throw new RuntimeException(e);
         }
     }
     

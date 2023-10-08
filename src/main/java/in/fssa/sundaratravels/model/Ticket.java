@@ -2,6 +2,7 @@ package in.fssa.sundaratravels.model;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.List;
 
 public class Ticket {
     private int ticketId;
@@ -9,6 +10,16 @@ public class Ticket {
     private Date travelDate;
     private int bookedSeats;
     private BigDecimal totalPrice;
+
+    public int[] getSeats() {
+        return seats;
+    }
+
+    public void setSeats(int[] seats) {
+        this.seats = seats;
+    }
+
+    private int[] seats;
 
     public String getPassengerName() {
         return passengerName;

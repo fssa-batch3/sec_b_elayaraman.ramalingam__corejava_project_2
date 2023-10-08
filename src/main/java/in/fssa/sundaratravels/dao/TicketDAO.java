@@ -1,5 +1,6 @@
 package in.fssa.sundaratravels.dao;
 
+import com.google.gson.Gson;
 import in.fssa.sundaratravels.exception.PersistenceException;
 import in.fssa.sundaratravels.model.Ticket;
 import in.fssa.sundaratravels.util.ConnectionUtil;
@@ -17,7 +18,7 @@ public class TicketDAO {
         ResultSet rs = null;
         int ticketId = -1;
         try {
-            String query = "INSERT INTO `tickets` (`booking_id`, `travel_date`, `booked_seats`, `passenger_name`, `phone_number`, `total_price`) VALUES (?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO `tickets` (`booking_id`, `travel_date`, `booked_seats`, `passenger_name`, `phone_number`, `total_price`,`seats`) VALUES (?, ?, ?, ?, ?,?, ?)";
             conn = ConnectionUtil.getConnection();
             ps = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setInt(1, ticket.getBookingId());
@@ -26,6 +27,7 @@ public class TicketDAO {
             ps.setString(4, ticket.getPassengerName());
             ps.setLong(5, ticket.getPhoneNumber());
             ps.setBigDecimal(6, ticket.getTotalPrice());
+            ps.setString(7,new Gson().toJson(ticket.getSeats()));
 
             ps.executeUpdate();
 
@@ -93,6 +95,32 @@ public class TicketDAO {
             ConnectionUtil.close(conn, ps, rs);
         }
         return ticket;
+    }
+
+    public List<Ticket> getTicketsByBookingId(int bookingId) throws PersistenceException {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Ticket> list = null;
+
+        try {
+            String query = "SELECT * FROM `tickets` WHERE  `booking_id` = ? AND `is_active` = TRUE";
+            conn = ConnectionUtil.getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, bookingId);
+
+            rs = ps.executeQuery();
+            list = new ArrayList<Ticket>();
+            while (rs.next()) {
+            	Ticket ticket = extractTicketFromResultSet(rs);
+                list.add(ticket);
+            }
+        } catch (SQLException e) {
+            throw new PersistenceException(e.getMessage());
+        } finally {
+            ConnectionUtil.close(conn, ps, rs);
+        }
+        return list;
     }
 
     public static List<Ticket> getTicketByPhoneNumber(long phoneNumber) throws PersistenceException {
@@ -219,6 +247,12 @@ public class TicketDAO {
         ticket.setPhoneNumber(rs.getLong("phone_number"));
         ticket.setTotalPrice(rs.getBigDecimal("total_price"));
         ticket.setActive(rs.getBoolean("is_active"));
+        String[] values = rs.getString("seats").substring(1, rs.getString("seats").length() - 1).split(", ");
+        int[] array = new int[values.length];
+        for (int i = 0; i < values.length; i++) {
+            array[i] = Integer.parseInt(values[i]);
+        }
+        ticket.setSeats(array);
         return ticket;
     }
 }
